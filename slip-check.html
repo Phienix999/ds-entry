@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<title>ตรวจสลิปซ้ำ — DS</title>
+<style>
+/* Inter font local fallback */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('vendor/fonts/inter/inter-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('vendor/fonts/inter/inter-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('vendor/fonts/inter/inter-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('vendor/fonts/inter/inter-latin-700-normal.woff2') format('woff2')}
+
+/* Modern Theme Variables */
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel2: #f1f5f9;
+  --panel-hover: #e2e8f0;
+  --line: #e2e8f0;
+  --line2: #cbd5e1;
+  --text: #0f172a;
+  --body: #334155;
+  --dim: #64748b;
+  --mute: #94a3b8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+  --on-accent: #ffffff;
+  --good: #059669;
+  --warn: #d97706;
+  --danger: #dc2626;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --font-sans: 'Inter', 'Noto Sans Thai', 'Leelawadee UI', -apple-system, system-ui, Arial, sans-serif;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 9999px;
+  --ease: .2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #090d16;
+  --panel: #131c2e;
+  --panel2: #1e293b;
+  --panel-hover: #2d3d59;
+  --line: #26334d;
+  --line2: #334155;
+  --text: #f8fafc;
+  --body: #cbd5e1;
+  --dim: #94a3b8;
+  --mute: #64748b;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-soft: rgba(59, 130, 246, 0.16);
+  --on-accent: #ffffff;
+  --good: #10b981;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(19, 28, 46, 0.85);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--font-sans);font-size:14px;transition:background-color var(--ease),color var(--ease)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:none;outline:none}
+b,strong{font-weight:600;color:var(--text)}
+
+/* Topbar */
+.top{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--glass-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);flex-wrap:wrap;position:sticky;top:0;z-index:20;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.brand{font-weight:700;font-size:17px;white-space:nowrap;color:var(--text);display:flex;align-items:center;gap:8px}
+.brand .logo-icon{width:28px;height:28px;background:linear-gradient(135deg, var(--danger), #f59e0b);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(220,38,38,0.3)}
+.brand small{display:block;font-weight:400;font-size:11px;color:var(--dim)}
+.spacer{flex:1}
+.navlink{color:var(--accent);text-decoration:none;font-weight:500;font-size:13px;border:1px solid var(--line2);border-radius:var(--r-sm);padding:7px 14px;transition:all var(--ease);display:inline-flex;align-items:center;gap:6px;background:var(--panel)}
+.navlink:hover{background:var(--panel2);border-color:var(--accent)}
+.pill{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 10px;font-size:12px;color:var(--dim);white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font-weight:500}
+.pill.good{color:var(--good);background:color-mix(in srgb,var(--good) 10%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.pill.warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel));border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+.btn-icon{padding:7px 10px;min-width:36px;border-radius:var(--r-sm);background:var(--panel);border:1px solid var(--line2);transition:all var(--ease)}
+.btn-icon:hover{background:var(--panel2);border-color:var(--accent)}
+
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:24px;font-weight:700;margin:0 0 6px;color:var(--text);letter-spacing:-0.3px}
+.sub{color:var(--dim);margin:0 0 24px;line-height:1.6;font-size:14.5px}
+
+.drop{border:2px dashed var(--line2);border-radius:var(--r-lg);padding:48px 24px;text-align:center;background:var(--panel);transition:all var(--ease);box-shadow:var(--card-shadow)}
+.drop.over{border-color:var(--accent);background:var(--accent-soft);transform:scale(1.01)}
+.drop .big{font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px}
+.drop .hint{color:var(--dim);font-size:13.5px}
+.drop input[type=file]{display:none}
+.drop label.pick{display:inline-flex;align-items:center;gap:6px;margin-top:18px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));color:var(--on-accent);border-radius:var(--r-sm);padding:9px 20px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px var(--accent-soft);transition:all var(--ease)}
+.drop label.pick:hover{transform:translateY(-1px);box-shadow:0 4px 12px var(--accent-soft)}
+
+#busy{display:none;align-items:center;gap:10px;padding:12px 18px;font-size:13px;margin-top:18px;background:var(--accent-soft);border-radius:var(--r-sm);color:var(--accent);font-weight:500}
+#busy.on{display:flex}
+.spin{width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Metrics Grid Summary */
+.summary-grid{display:none;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:14px;margin-top:24px}
+.summary-grid.on{display:grid}
+.metric-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:16px;box-shadow:var(--card-shadow);display:flex;flex-direction:column;gap:4px}
+.metric-card .title{font-size:12px;color:var(--dim);font-weight:500}
+.metric-card .value{font-size:22px;font-weight:700;color:var(--text)}
+.metric-card.good .value{color:var(--good)}
+.metric-card.danger .value{color:var(--danger)}
+.metric-card.warn .value{color:var(--warn)}
+
+/* Table & Results */
+.card-table{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--card-shadow);margin-top:24px;overflow:hidden}
+table{border-collapse:collapse;width:100%;font-size:13px}
+thead th{background:var(--panel2);border-bottom:2px solid var(--line);padding:11px 12px;text-align:left;font-size:12px;font-weight:600;color:var(--dim);white-space:nowrap}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;color:var(--body)}
+tbody tr.new{background:color-mix(in srgb,var(--good) 6%,var(--panel))}
+tbody tr.dup{background:color-mix(in srgb,var(--danger) 10%,var(--panel))}
+tbody tr.unknown{background:var(--panel2)}
+.status{font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.status.new{color:var(--good)}
+.status.dup{color:var(--danger)}
+.status.unknown{color:var(--mute)}
+.mono{font-variant-numeric:tabular-nums;font-family:monospace}
+.confirmBtn{background:var(--danger);color:#fff;border:none;border-radius:var(--r-sm);padding:6px 12px;font-size:12px;font-weight:600;white-space:nowrap;transition:all var(--ease);box-shadow:0 2px 6px rgba(220,38,38,0.2)}
+.confirmBtn:hover:not(:disabled){transform:translateY(-1px);background:#b91c1c}
+.confirmBtn:disabled{opacity:.5;cursor:default;box-shadow:none}
+.prevInfo{font-size:11.5px;color:var(--dim);margin-top:2px}
+tbody td.hit{color:var(--danger);font-weight:700;background:color-mix(in srgb,var(--danger) 16%,transparent)}
+
+.toast{position:fixed;left:50%;bottom:-80px;transform:translateX(-50%);background:var(--text);border:1px solid var(--line2);border-radius:var(--r-md);padding:12px 24px;font-weight:500;color:var(--bg);box-shadow:0 10px 25px rgba(0,0,0,0.2);transition:all .3s;z-index:99;max-width:90vw}
+.toast.show{bottom:26px}
+.toast.bad{background:var(--danger);color:#fff}
+
+/* ===================== แท็บเล็ต / จอสัมผัส ===================== */
+@media(hover:none){
+  .drop label.pick:hover{transform:none}
+  .confirmBtn:hover:not(:disabled){transform:none}
+}
+@media(pointer:coarse){
+  body{font-size:15px;-webkit-text-size-adjust:100%}
+  .btn-icon{min-width:46px;min-height:46px;padding:10px 14px}
+  .drop label.pick{padding:14px 26px;font-size:15px;min-height:52px}
+  .confirmBtn{padding:12px 18px;font-size:13.5px;min-height:44px}
+  tbody td{padding:14px 12px}
+  thead th{padding:14px 12px}
+  .navlink{min-height:46px;display:inline-flex;align-items:center}
+}
+.top{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+.wrap{padding-bottom:max(60px,env(safe-area-inset-bottom))}
+
+/* ตารางผลกว้างเกินจอแท็บเล็ตแนวตั้ง — ให้เลื่อนแนวนอนในกล่องของมันเอง */
+.card-table{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.card-table table{min-width:720px}
+
+@media(max-width:900px){
+  .top{gap:8px;padding:10px 12px}
+  .brand small{display:none}
+  .wrap{padding:16px 12px 60px}
+  h1{font-size:20px}
+  .sub{font-size:13.5px}
+  .drop{padding:32px 16px}
+  .summary-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+  .metric-card{padding:12px}
+  .metric-card .value{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">
+    <span class="logo-icon">🔎</span>
+    <div>ตรวจสลิปซ้ำ<small>ตรวจสอบประวัติสลิปไม่ให้บันทึกซ้ำ</small></div>
+  </div>
+  <span class="pill" id="ocrPill">⏳ กำลังโหลดตัวอ่าน OCR…</span>
+  <span class="pill" id="storePill" title="ที่เก็บประวัติสลิป (slip_log.json)"></span>
+  <div class="spacer"></div>
+  <button class="btn-icon" id="odBtn" hidden title="ล็อกอิน OneDrive เพื่อใช้ประวัติสลิปร่วมกับเครื่องอื่น">☁ เชื่อม OneDrive</button>
+  <button class="btn-icon" id="themeBtn" title="สลับโหมดสว่าง/มืด">🌙</button>
+  <a class="navlink" href="index.html">↩ ไปหน้าแลกเงินกีบ</a>
+</div>
+
+<div class="wrap">
+  <h1>ลากรูปสลิปมาตรวจ</h1>
+  <p class="sub">
+    หน้านี้ใช้เช็คว่าสลิปที่แนบเข้ามาเคยถูกบันทึกไว้แล้วหรือยัง โดยเทียบทีละจุด ได้แก่
+    <b>เลขอ้างอิง 1</b> (รหัสขึ้นต้นด้วย BONE), <b>เลขอ้างอิง 2</b> (กลุ่มตัวเลข) และ <b>วันเวลาบนสลิป</b><br>
+    <b>ซ้ำเพียงจุดใดจุดหนึ่งก็ถือว่าเป็นสลิปซ้ำ</b> เช่น เลขอ้างอิงตรงกันแต่วันเวลาไม่ตรง ก็ยังนับว่าซ้ำ<br>
+    สลิปใหม่จะถูกบันทึกไว้ในประวัติทันที (ไฟล์ <code>slip_log.json</code>) ส่วนสลิปซ้ำจะแสดงแถบเตือนสีแดง
+  </p>
+
+  <div class="drop" id="drop">
+    <div class="big">📎 ลากรูปสลิปมาวางตรงนี้</div>
+    <div class="hint">หรือ Ctrl+V วางจากคลิปบอร์ดหลังแคปหน้าจอ — วางได้หลายรูปพร้อมกัน</div>
+    <label class="pick">🖼️ เลือกไฟล์รูปสลิป<input type="file" id="filePick" accept="image/*" multiple></label>
+  </div>
+
+  <div id="busy"><span class="spin"></span><span id="busyText"></span></div>
+
+  <div class="summary-grid" id="summary">
+    <div class="metric-card"><span class="title">ตรวจแล้วทั้งหมด</span><span class="value" id="mTotal">0</span></div>
+    <div class="metric-card good"><span class="title">สลิปใหม่ (บันทึกแล้ว)</span><span class="value" id="mNew">0</span></div>
+    <div class="metric-card danger"><span class="title">สลิปซ้ำเตือน</span><span class="value" id="mDup">0</span></div>
+    <div class="metric-card warn"><span class="title">อ่านข้อมูลไม่พอ</span><span class="value" id="mUnknown">0</span></div>
+  </div>
+
+  <div class="card-table" id="resultCard" hidden>
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>#</th><th>ไฟล์</th><th>วันที่</th><th>เวลา</th>
+          <th>เลขอ้างอิง 1</th><th>เลขอ้างอิง 2</th><th>สถานะ</th><th>การกระทำ</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="lib/android.js"></script>
+<script src="lib/auth.js"></script>
+<script src="lib/graph.js"></script>
+<script src="lib/picker.js"></script>
+<script src="lib/store.js"></script>
+<script src="lib/pwa.js"></script>
+<script src="vendor/tesseract/tesseract.min.js"></script>
+<script>
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+function initTheme(){
+  const saved = localStorage.getItem('ds_theme') || 'light';
+  setTheme(saved);
+  $('#themeBtn').onclick = () => {
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  };
+}
+
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ds_theme', theme);
+  $('#themeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function toast(msg, kind=''){
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + kind;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { el.className = 'toast'; }, 3400);
+}
+
+/* ==================== OCR ในเครื่อง (Tesseract.js ไทย+อังกฤษ) ==================== */
+const S = { ocr:{ ready:false, loading:false, error:'' }, results:[], idx:null };
+const TESS_BASE = new URL('vendor/tesseract/', document.baseURI).href;
+let tessWorkerPromise = null;
+
+function updateOcrPill(){
+  const pill = $('#ocrPill');
+  if (S.ocr.ready) {
+    pill.textContent = '🖼️ พร้อมอ่านสลิป (ไทย+อังกฤษ)';
+    pill.className = 'pill good';
+  } else if (S.ocr.loading) {
+    pill.textContent = '⏳ กำลังโหลดตัวอ่าน OCR…';
+    pill.className = 'pill warn';
+  } else {
+    pill.textContent = '🖼️ อ่านรูปไม่ได้';
+    pill.className = 'pill warn';
+  }
+}
+
+function getTessWorker(){
+  if (tessWorkerPromise) return tessWorkerPromise;
+  S.ocr.loading = true; updateOcrPill();
+  tessWorkerPromise = Tesseract.createWorker('tha+eng', 1, {
+    workerPath: TESS_BASE + 'worker.min.js',
+    corePath:   TESS_BASE,
+    langPath:   TESS_BASE + 'lang',
+    logger: m => {
+      if (m.status === 'recognizing text' && typeof m.progress === 'number') {
+        const el = $('#busyText');
+        if (el && el.dataset.base) el.textContent = el.dataset.base + ' — กำลังจดจำอักษร ' + Math.round(m.progress * 100) + '%';
+      }
+    },
+  }).then(w => {
+    S.ocr.ready = true; S.ocr.loading = false; S.ocr.error = '';
+    updateOcrPill();
+    return w;
+  }).catch(e => {
+    S.ocr.ready = false; S.ocr.loading = false;
+    S.ocr.error = 'โหลดตัวอ่าน OCR ไม่สำเร็จ: ' + (e && e.message ? e.message : e);
+    tessWorkerPromise = null;
+    updateOcrPill();
+    throw e;
+  });
+  return tessWorkerPromise;
+}
+
+function fileToImage(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload  = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+    img.src = url;
+  });
+}
+function imageToCanvas(img){
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth || img.width;
+  c.height = img.naturalHeight || img.height;
+  c.getContext('2d', { willReadFrequently:true }).drawImage(img, 0, 0);
+  return c;
+}
+function scaleCanvas(canvas, factor){
+  if (Math.abs(factor - 1) < 0.01) return canvas;
+  const out = document.createElement('canvas');
+  out.width  = Math.max(1, Math.round(canvas.width  * factor));
+  out.height = Math.max(1, Math.round(canvas.height * factor));
+  const ctx = out.getContext('2d');
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(canvas, 0, 0, out.width, out.height);
+  return out;
+}
+function autoTrim(canvas){
+  const ctx = canvas.getContext('2d', { willReadFrequently:true });
+  const w = canvas.width, h = canvas.height;
+  if (w < 20 || h < 20) return canvas;
+  const { data } = ctx.getImageData(0, 0, w, h);
+  const gray = new Float32Array(w * h);
+  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+    gray[p] = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+  }
+  const rowVar = y => { let s=0,s2=0; const o=y*w; for (let x=0;x<w;x++){ const v=gray[o+x]; s+=v; s2+=v*v; } const m=s/w; return s2/w - m*m; };
+  const colVar = x => { let s=0,s2=0; for (let y=0;y<h;y++){ const v=gray[y*w+x]; s+=v; s2+=v*v; } const m=s/h; return s2/h - m*m; };
+  const VAR_TH = 55, MAX_TRIM = 0.35;
+  const maxY = Math.floor(h * MAX_TRIM), maxX = Math.floor(w * MAX_TRIM);
+  let top = 0, bottom = h - 1, left = 0, right = w - 1;
+  while (top < maxY && rowVar(top) < VAR_TH) top++;
+  while (bottom > h - 1 - maxY && rowVar(bottom) < VAR_TH) bottom--;
+  while (left < maxX && colVar(left) < VAR_TH) left++;
+  while (right > w - 1 - maxX && colVar(right) < VAR_TH) right--;
+  if (right - left < w * 0.3 || bottom - top < h * 0.3) return canvas;
+  if (left === 0 && top === 0 && right === w - 1 && bottom === h - 1) return canvas;
+  const cw = right - left + 1, ch = bottom - top + 1;
+  const out = document.createElement('canvas');
+  out.width = cw; out.height = ch;
+  out.getContext('2d').drawImage(canvas, left, top, cw, ch, 0, 0, cw, ch);
+  return out;
+}
+function estimateSkewAngle(canvas){
+  const small = scaleCanvas(canvas, Math.min(1, 480 / canvas.width));
+  const ctx = small.getContext('2d', { willReadFrequently:true });
+  const w = small.width, h = small.height;
+  const { data } = ctx.getImageData(0, 0, w, h);
+  const gray = new Float32Array(w * h);
+  let mean = 0;
+  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+    const g = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+    gray[p] = g; mean += g;
+  }
+  mean /= gray.length;
+  const cx = w / 2, cy = h / 2;
+  function score(deg){
+    const rad = deg * Math.PI / 180, sin = Math.sin(rad), cos = Math.cos(rad);
+    const bins = new Float64Array(h);
+    for (let y = 0; y < h; y++) {
+      const row = y * w;
+      for (let x = 0; x < w; x++) {
+        if (gray[row + x] >= mean) continue;
+        const ry = Math.round((x - cx) * sin + (y - cy) * cos + cy);
+        if (ry >= 0 && ry < h) bins[ry]++;
+      }
+    }
+    let m = 0, m2 = 0;
+    for (let i = 0; i < h; i++) { m += bins[i]; m2 += bins[i]*bins[i]; }
+    m /= h; return m2 / h - m*m;
+  }
+  let best = 0, bestScore = -1;
+  for (let a = -8; a <= 8; a += 0.5) {
+    const s = score(a);
+    if (s > bestScore) { bestScore = s; best = a; }
+  }
+  return best;
+}
+function rotateCanvas(canvas, angleDeg){
+  if (Math.abs(angleDeg) < 0.3) return canvas;
+  const rad = angleDeg * Math.PI / 180;
+  const w = canvas.width, h = canvas.height;
+  const nw = Math.ceil(Math.abs(w * Math.cos(rad)) + Math.abs(h * Math.sin(rad)));
+  const nh = Math.ceil(Math.abs(w * Math.sin(rad)) + Math.abs(h * Math.cos(rad)));
+  const out = document.createElement('canvas');
+  out.width = nw; out.height = nh;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, nw, nh);
+  ctx.translate(nw / 2, nh / 2); ctx.rotate(rad);
+  ctx.drawImage(canvas, -w / 2, -h / 2);
+  return out;
+}
+function enhanceForOcr(canvas){
+  let work = canvas;
+  const MAXW = 1800, MINW = 900;
+  if (work.width > MAXW) work = scaleCanvas(work, MAXW / work.width);
+  else if (work.width < MINW) work = scaleCanvas(work, MINW / work.width);
+
+  const ctx = work.getContext('2d', { willReadFrequently:true });
+  const w = work.width, h = work.height;
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+  const gray = new Float32Array(w * h);
+  const hist = new Uint32Array(256);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const g = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+    gray[p] = g; hist[g|0]++;
+  }
+  const total = w * h, cut = total * 0.01;
+  let lo = 0, hi = 255, acc = 0;
+  for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc >= cut) { lo = i; break; } }
+  acc = 0;
+  for (let i = 255; i >= 0; i--) { acc += hist[i]; if (acc >= cut) { hi = i; break; } }
+  if (hi <= lo) { lo = 0; hi = 255; }
+  const scale = 255 / (hi - lo);
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = y * w + x;
+      let blur = gray[idx];
+      if (x > 0 && x < w-1 && y > 0 && y < h-1) {
+        blur = (gray[idx-1] + gray[idx+1] + gray[idx-w] + gray[idx+w] + gray[idx]*4) / 8;
+      }
+      let v = gray[idx] + 0.6 * (gray[idx] - blur);
+      v = (v - lo) * scale;
+      v = v < 0 ? 0 : v > 255 ? 255 : v;
+      const o = idx * 4;
+      d[o] = d[o+1] = d[o+2] = v;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+  return work;
+}
+async function preprocessSlipImage(file){
+  const img = await fileToImage(file);
+  let c = imageToCanvas(img);
+  c = autoTrim(c);
+  const angle = estimateSkewAngle(c);
+  c = rotateCanvas(c, angle);
+  if (Math.abs(angle) >= 0.3) c = autoTrim(c);
+  c = enhanceForOcr(c);
+  return c;
+}
+
+function pad2(n){ return String(n).padStart(2, '0'); }
+function pad4(n){ return String(n).padStart(4, '0'); }
+function hhmmss(h, m, s){ let t = pad2(h) + ':' + pad2(m); if (s) t += ':' + pad2(s); return t; }
+function isoDate(y, mo, d){
+  if (y < 100) y += 2000;
+  if (y > new Date().getFullYear() + 400) y -= 543;
+  return pad4(y) + '-' + pad2(mo) + '-' + pad2(d);
+}
+function flattenLines(data){
+  const out = [];
+  for (const b of data.blocks || []) {
+    for (const p of b.paragraphs || []) {
+      for (const l of p.lines || []) {
+        out.push({ text: l.text || '', y: (l.bbox && l.bbox.y0) || 0, words: l.words || [] });
+      }
+    }
+  }
+  return out;
+}
+
+function extractRefCodes(flat){
+  let ref1 = null;
+  let m = flat.match(/\bBONE[A-Z0-9]{5,}\b/i);
+  if (m) {
+    ref1 = m[0].toUpperCase();
+  } else {
+    const tokens = flat.match(/\b[A-Z0-9]{10,20}\b/gi) || [];
+    const skip = /^(VERIFIED|ONEPROOF|BANQUE|COMMERCE|EXTERIEUR)$/i;
+    for (const t of tokens) {
+      if (skip.test(t)) continue;
+      if (/[A-Z]/i.test(t) && /\d/.test(t)) { ref1 = t.toUpperCase(); break; }
+    }
+  }
+  let ref2 = null;
+  const re2 = /\b\d{2,4}(?:\s\d{3,4}){1,4}\b/g;
+  let mm;
+  while ((mm = re2.exec(flat))) {
+    const digits = mm[0].replace(/\s+/g, '');
+    if (digits.length >= 8 && digits.length <= 20) ref2 = digits;
+  }
+  return { ref1, ref2 };
+}
+
+function extractSlipMeta(data){
+  const lines = flattenLines(data);
+  const flat = (data.text || '').replace(/\s+/g, ' ').trim();
+  const stamps = [];
+  for (const line of lines) {
+    let m = line.text.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\s*[-T]?\s*(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?/);
+    if (m) { stamps.push({ date: isoDate(+m[1], +m[2], +m[3]), y: line.y, time: hhmmss(m[4], m[5], m[6]) }); continue; }
+    m = line.text.match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\s*[-T]?\s*(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?/);
+    if (m) { stamps.push({ date: isoDate(+m[3], +m[2], +m[1]), y: line.y, time: hhmmss(m[4], m[5], m[6]) }); continue; }
+    for (let i = 0; i < line.words.length; i++) {
+      const wd = line.words[i];
+      let iso = null, mm2;
+      if ((mm2 = wd.text.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/))) iso = isoDate(+mm2[1], +mm2[2], +mm2[3]);
+      else if ((mm2 = wd.text.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$/))) iso = isoDate(+mm2[3], +mm2[2], +mm2[1]);
+      if (!iso) continue;
+      let tm = null;
+      const next = line.words[i + 1];
+      if (next) {
+        const tmm = next.text.match(/^(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?$/);
+        if (tmm && +tmm[1] <= 23 && +tmm[2] <= 59) tm = hhmmss(tmm[1], tmm[2], tmm[3]);
+      }
+      if (!tm) {
+        for (const w2 of line.words) {
+          const tmm = w2.text.match(/(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?/);
+          if (tmm && +tmm[1] <= 23 && +tmm[2] <= 59) { tm = hhmmss(tmm[1], tmm[2], tmm[3]); break; }
+        }
+      }
+      stamps.push({ date: iso, y: (wd.bbox && wd.bbox.y0) || line.y, time: tm });
+    }
+  }
+  stamps.sort((a, b) => a.y - b.y);
+
+  const looseRaw = [];
+  for (const line of lines) {
+    const re = /\b(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?\b/g;
+    let mt;
+    while ((mt = re.exec(line.text))) {
+      if (+mt[1] <= 23 && +mt[2] <= 59) looseRaw.push({ time: hhmmss(mt[1], mt[2], mt[3]), y: line.y });
+    }
+  }
+  looseRaw.sort((a, b) => a.y - b.y);
+  const looseTimes = looseRaw.map(x => x.time);
+
+  const { ref1, ref2 } = extractRefCodes(flat);
+  return { stamps, looseTimes, ref1, ref2 };
+}
+
+/* ประวัติสลิปเก็บที่ไหน — OneDrive ถ้าล็อกอินอยู่ ไม่งั้นเซิร์ฟเวอร์ในเครื่อง
+   หรือในเบราว์เซอร์เครื่องนี้ (ดู lib/store.js) */
+async function getSlipLog(){
+  const j = await DS.store.readSlipLog();
+  return Array.isArray(j) ? j : [];
+}
+async function saveSlipLog(list){
+  const res = await DS.store.writeSlipLog(list);
+  if (!res.ok) console.warn('บันทึกประวัติสลิปไม่สำเร็จ', res.error);
+  return res.ok;
+}
+function slipFingerprint(date, time, ref1, ref2){
+  if (!date && !time && !ref1 && !ref2) return null;
+  return [date || '', time || '', (ref1 || '').toUpperCase(), ref2 || ''].join('|');
+}
+
+/* ---- ตรวจซ้ำแบบ "ซ้ำจุดใดจุดหนึ่งก็ถือว่าซ้ำ" ----
+   จุดที่ใช้เทียบ: เลขอ้างอิง 1 / เลขอ้างอิง 2 / วันเวลาบนสลิป
+   วันที่กับเวลาถูกจับคู่เป็นจุดเดียว เพราะถ้าเทียบวันที่อย่างเดียว
+   สลิปทุกใบของวันเดียวกันจะกลายเป็นสลิปซ้ำทันที */
+const DUP_FIELDS = [
+  { key:'ref1', label:'เลขอ้างอิง 1' },
+  { key:'ref2', label:'เลขอ้างอิง 2' },
+  { key:'dt',   label:'วันเวลาบนสลิป' },
+];
+
+function normRef(v){
+  const s = String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  return s.length >= 6 ? s : '';
+}
+function slipKeys(date, time, ref1, ref2){
+  const keys = {};
+  const r1 = normRef(ref1); if (r1) keys.ref1 = r1;
+  const r2 = normRef(ref2); if (r2) keys.ref2 = r2;
+  if (date && time) keys.dt = date + ' ' + time;
+  return keys;
+}
+function newIndex(){ return { ref1:new Map(), ref2:new Map(), dt:new Map() }; }
+function addToIndex(idx, entry){
+  const keys = slipKeys(entry.date, entry.time, entry.ref1, entry.ref2);
+  for (const f of DUP_FIELDS) {
+    const v = keys[f.key];
+    if (v && !idx[f.key].has(v)) idx[f.key].set(v, entry);
+  }
+}
+function buildIndex(log){
+  const idx = newIndex();
+  for (const e of log) addToIndex(idx, e);
+  return idx;
+}
+function findDupHits(idx, keys){
+  const hits = [];
+  for (const f of DUP_FIELDS) {
+    const v = keys[f.key];
+    if (v && idx[f.key].has(v)) hits.push({ key:f.key, label:f.label, prev: idx[f.key].get(v) });
+  }
+  return hits;
+}
+
+function fmtDateTH(iso){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || '');
+}
+
+function renderResults(){
+  const rows = S.results;
+  $('#resultCard').hidden = rows.length === 0;
+  const tb = $('#tbody'); tb.innerHTML = '';
+  rows.forEach((r, idx) => {
+    const tr = document.createElement('tr');
+    tr.className = r.status;
+    const cells = [
+      String(idx + 1),
+      r.file,
+      r.date ? fmtDateTH(r.date) : '<span style="color:var(--mute)">—</span>',
+      r.time || '<span style="color:var(--mute)">—</span>',
+      r.ref1 ? '<span class="mono">' + r.ref1 + '</span>' : '<span style="color:var(--mute)">—</span>',
+      r.ref2 ? '<span class="mono">' + r.ref2 + '</span>' : '<span style="color:var(--mute)">—</span>',
+    ];
+    const tds = cells.map(html => { const td = document.createElement('td'); td.innerHTML = html; tr.appendChild(td); return td; });
+
+    // ไฮไลต์ช่องที่ตรงกับสลิปเดิม (คอลัมน์ 2=วันที่ 3=เวลา 4=อ้างอิง1 5=อ้างอิง2)
+    const HIT_CELLS = { ref1:[4], ref2:[5], dt:[2,3] };
+    for (const h of r.hits || []) for (const i of HIT_CELLS[h.key] || []) tds[i].classList.add('hit');
+
+    const statusTd = document.createElement('td');
+    if (r.status === 'new') {
+      statusTd.innerHTML = '<span class="status new">✔ ใหม่ — บันทึกแล้ว</span>';
+    } else if (r.status === 'unknown') {
+      statusTd.innerHTML = '<span class="status unknown">อ่านข้อมูลไม่พอจะเช็ค</span>';
+    } else {
+      const when = r.prev && r.prev.savedAt ? new Date(r.prev.savedAt).toLocaleString('th-TH') : '';
+      const what = (r.hits || []).map(h => h.label).join(' + ');
+      statusTd.innerHTML = '<span class="status dup">⚠ สลิปซ้ำ</span>'
+        + (what ? '<div class="prevInfo">ซ้ำที่: ' + what + '</div>' : '')
+        + (when ? '<div class="prevInfo">เคยบันทึกเมื่อ ' + when + '</div>' : '');
+    }
+    tr.appendChild(statusTd);
+
+    const actTd = document.createElement('td');
+    if (r.status === 'dup') {
+      const b = document.createElement('button');
+      b.className = 'confirmBtn';
+      if (r.confirmed) { b.textContent = 'บันทึกซ้ำแล้ว'; b.disabled = true; }
+      else {
+        b.textContent = 'ยืนยันบันทึกซ้ำ';
+        b.onclick = async () => {
+          const log = await getSlipLog();
+          const entry = {
+            fp: r.fp, ref1: r.ref1 || '', ref2: r.ref2 || '', date: r.date || '', time: r.time || '',
+            file: r.file, confirmedDup: true, savedAt: new Date().toISOString(),
+          };
+          log.push(entry);
+          if (S.idx) addToIndex(S.idx, entry);
+          await saveSlipLog(log);
+          r.confirmed = true;
+          renderResults();
+          toast('บันทึกสลิปซ้ำไว้แล้ว', 'bad');
+        };
+      }
+      actTd.appendChild(b);
+    }
+    tr.appendChild(actTd);
+    tb.appendChild(tr);
+  });
+}
+
+function renderSummary(nNew, nDup, nUnknown, nFailed){
+  const grid = $('#summary');
+  grid.classList.add('on');
+  $('#mTotal').textContent = nNew + nDup + nUnknown;
+  $('#mNew').textContent = nNew;
+  $('#mDup').textContent = nDup;
+  $('#mUnknown').textContent = nUnknown;
+}
+
+async function handleFiles(files){
+  const imgs = Array.from(files).filter(f => /^image\//.test(f.type));
+  if (!imgs.length) return;
+
+  let worker;
+  try { worker = await getTessWorker(); }
+  catch (e) { toast('อ่านรูปไม่ได้: ' + (S.ocr.error || ''), 'bad'); return; }
+
+  const slipLog = await getSlipLog();
+  const idx = buildIndex(slipLog);
+  S.idx = idx;
+  let logChanged = false;
+  let nNew = 0, nDup = 0, nUnknown = 0, nFailed = 0;
+
+  $('#busy').classList.add('on');
+  for (let i = 0; i < imgs.length; i++) {
+    const f = imgs[i];
+    const el = $('#busyText');
+    el.dataset.base = 'กำลังอ่านรูป ' + (i + 1) + ' / ' + imgs.length + ' …';
+    el.textContent = el.dataset.base;
+    try {
+      const canvas = await preprocessSlipImage(f);
+      const { data } = await worker.recognize(canvas, {}, { text:true, blocks:true, hocr:false, tsv:false });
+      const meta = extractSlipMeta(data);
+      const date = (meta.stamps[0] && meta.stamps[0].date) || '';
+      const time = (meta.stamps[0] && meta.stamps[0].time) || (meta.looseTimes && meta.looseTimes[0]) || '';
+      const fp = slipFingerprint(date, time, meta.ref1, meta.ref2);
+      const keys = slipKeys(date, time, meta.ref1, meta.ref2);
+      const base = { file: f.name || 'clipboard', date, time, ref1: meta.ref1, ref2: meta.ref2, fp };
+      const hits = findDupHits(idx, keys);
+
+      if (!Object.keys(keys).length) {
+        S.results.push(Object.assign({}, base, { fp:null, status:'unknown' }));
+        nUnknown++;
+      } else if (hits.length) {
+        S.results.push(Object.assign({}, base, { status:'dup', hits, prev: hits[0].prev, confirmed:false }));
+        nDup++;
+      } else {
+        const entry = { fp, ref1: meta.ref1 || '', ref2: meta.ref2 || '', date, time, file: base.file, savedAt: new Date().toISOString() };
+        slipLog.push(entry); addToIndex(idx, entry); logChanged = true;
+        S.results.push(Object.assign({}, base, { status:'new' }));
+        nNew++;
+      }
+    } catch (e) { console.error(e); nFailed++; }
+    renderResults();
+  }
+  $('#busy').classList.remove('on');
+  if (logChanged) await saveSlipLog(slipLog);
+  renderSummary(nNew, nDup, nUnknown, nFailed);
+}
+
+/* ------------------------------------------------- ที่เก็บประวัติสลิป */
+function updateStorePill(){
+  const where = DS.store.sideStore();
+  const pill = $('#storePill');
+  pill.textContent = '💾 ประวัติเก็บที่ ' + DS.store.sideStoreLabel();
+  pill.className = 'pill' + (where === 'browser' ? ' warn' : '');
+  pill.title = where === 'browser'
+    ? 'ประวัติสลิปเก็บอยู่ในเบราว์เซอร์เครื่องนี้เท่านั้น — ล็อกอิน OneDrive เพื่อใช้ร่วมกับเครื่องอื่น'
+    : 'ที่เก็บประวัติสลิป (slip_log.json)';
+  $('#odBtn').hidden = !DS.auth.isConfigured() || where === 'onedrive';
+}
+
+async function connectOneDrive(){
+  try {
+    await DS.picker.ensureSignedIn();
+  } catch (e) {
+    toast('เชื่อม OneDrive ไม่สำเร็จ: ' + e.message, 'bad');
+  }
+  updateStorePill();
+}
+
+function init(){
+  initTheme();
+  updateOcrPill();
+  getTessWorker().catch(() => {});
+
+  $('#odBtn').onclick = connectOneDrive;
+  DS.auth.onChange(updateStorePill);
+  DS.auth.completeRedirect()
+    .catch(err => toast('เข้าสู่ระบบ OneDrive ไม่สำเร็จ: ' + err.message, 'bad'))
+    .finally(updateStorePill);
+  updateStorePill();
+
+  $('#filePick').addEventListener('change', e => { handleFiles(e.target.files); e.target.value = ''; });
+
+  const drop = $('#drop');
+  ['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => { e.preventDefault(); handleFiles(e.dataTransfer.files); });
+
+  document.addEventListener('paste', e => {
+    const files = [];
+    for (const it of (e.clipboardData && e.clipboardData.items) || []) {
+      if (it.kind === 'file' && /^image\//.test(it.type)) { const f = it.getAsFile(); if (f) files.push(f); }
+    }
+    if (files.length) handleFiles(files);
+  });
+}
+init();
+</script>
+</body>
+</html>

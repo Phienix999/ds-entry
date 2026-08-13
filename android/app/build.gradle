@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.application'
+}
+
+/*
+ * กุญแจเซ็นแอป (android/keystore.jks) ถูกสร้างและ commit โดย GitHub Actions ในการ build ครั้งแรก
+ * แล้วใช้ซ้ำตลอดไป - จำเป็นต้องคงที่ ไม่งั้นอัปเดตทับแอปเดิมไม่ได้ ต้องถอนแล้วลงใหม่ทุกครั้ง
+ * (ซึ่งจะทำให้สิทธิ์เข้าถึงไฟล์ที่จำไว้และค่าที่ตั้งไว้หายหมด)
+ *
+ * กุญแจนี้อยู่ใน repo สาธารณะ = ใครก็เอาไปเซ็นแอปชื่อเดียวกันได้ ยอมรับความเสี่ยงนี้เพราะ
+ * แอปนี้ลงเองด้วยมือ ไม่ได้อยู่บน Play Store และคนที่หลอกให้เราลง APK ปลอมได้
+ * ก็ทำอันตรายได้อยู่แล้วไม่ว่าจะเซ็นด้วยกุญแจอะไร
+ */
+def keystoreFile = rootProject.file('keystore.jks')
+
+android {
+    namespace 'com.dsentry.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.dsentry.app"
+        minSdk 24
+        targetSdk 34
+        versionCode project.hasProperty('appVersionCode') ? appVersionCode.toInteger() : 1
+        versionName project.hasProperty('appVersionName') ? appVersionName : "1.0"
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile keystoreFile
+                storePassword 'dsentry'
+                keyAlias 'dsentry'
+                keyPassword 'dsentry'
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // ปิด minify - โค้ด Java มีไฟล์เดียว ย่อไปไม่ได้อะไร แต่เสี่ยงพังเปล่า ๆ
+            minifyEnabled false
+            if (keystoreFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // ไม่ต้องตั้ง noCompress ให้ไฟล์ OCR - WebViewAssetLoader อ่านผ่าน AssetManager.open()
+    // ซึ่งคลายบีบอัดให้เองอยู่แล้ว ตั้งไปมีแต่จะไปผูกกับ DSL ที่เปลี่ยนไปตามเวอร์ชัน AGP
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

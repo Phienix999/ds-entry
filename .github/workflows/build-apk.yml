@@ -1,0 +1,126 @@
+# สร้างไฟล์ .apk ให้อัตโนมัติทุกครั้งที่โค้ดเปลี่ยน
+# แล้วเอาไปแปะไว้ที่หน้า Releases ให้โหลดลงแท็บเล็ตได้ตรง ๆ ผ่าน Chrome
+#
+# ลิงก์โหลดถาวร (ไม่เปลี่ยน):
+#   https://github.com/<user>/<repo>/releases/latest/download/ds-entry.apk
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ตั้งค่า Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # กุญแจเซ็นแอปต้องเป็นดอกเดิมทุกครั้ง ไม่งั้นติดตั้งทับแอปเดิมบนแท็บเล็ตไม่ได้
+      - name: เตรียมกุญแจเซ็นแอป
+        run: |
+          git fetch origin main || true
+          git checkout origin/main -- android/keystore.jks 2>/dev/null || true
+          if [ -f android/keystore.jks ]; then
+            echo "ใช้กุญแจเดิมจาก repo"
+          else
+            mkdir -p android
+            keytool -genkeypair -v \
+              -keystore android/keystore.jks \
+              -storepass dsentry -keypass dsentry -alias dsentry \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=DS Entry, O=DS, C=TH"
+            echo "NEW_KEY=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: เก็บกุญแจไว้ใช้ครั้งหน้า
+        if: env.NEW_KEY == '1'
+        continue-on-error: true
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -f android/keystore.jks
+          git commit -m 'build: add app signing key'
+          git push origin HEAD:main || echo 'push กุญแจไม่ได้ - ข้ามไป build ต่อ'
+
+      - name: ใส่หน้าเว็บเข้าไปในแอป
+        run: |
+          mkdir -p android/app/src/main/assets/www
+          rsync -a --delete \
+            --exclude '.git*' \
+            --exclude 'android/' \
+            --exclude 'customers.xlsx' \
+            --exclude 'slip_log.json' \
+            --exclude '*.xlsx' \
+            --exclude '*.ps1' \
+            --exclude '*.cmd' \
+            --exclude '*.md' \
+            --exclude 'sw.js' \
+            --exclude '_test-*' \
+            ./ android/app/src/main/assets/www/
+          echo '--- ไฟล์ที่ใส่เข้าไป ---'
+          find android/app/src/main/assets/www -maxdepth 1
+          du -sh android/app/src/main/assets/www
+
+      - name: ตรวจว่าไม่มีข้อมูลลูกค้าหลุดเข้าไปในแอป
+        run: |
+          leak=$(find android/app/src/main/assets/www \
+                   \( -name '*.xlsx' -o -name 'slip_log.json' \) -print)
+          if [ -n "$leak" ]; then
+            echo "หยุด - ไฟล์เหล่านี้ไม่ควรอยู่ในแอป:"; echo "$leak"; exit 1
+          fi
+          echo "ผ่าน"
+
+      - name: ตั้งค่า Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: ตั้งค่า Android SDK Path & Licenses
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
+
+      - name: Build APK
+        working-directory: android
+        run: |
+          gradle assembleRelease --no-daemon --stacktrace \
+            -x lint -x lintVitalAnalyzeRelease -x lintVitalReportRelease \
+            -PappVersionCode=${{ github.run_number }} \
+            -PappVersionName=1.0.${{ github.run_number }}
+          ls -la app/build/outputs/apk/release/
+
+      - name: เปลี่ยนชื่อไฟล์
+        run: |
+          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
+            cp android/app/build/outputs/apk/release/app-release.apk ds-entry.apk
+          else
+            cp android/app/build/outputs/apk/release/*.apk ds-entry.apk
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ds-entry-apk
+          path: ds-entry.apk
+
+      - name: แปะขึ้นหน้า Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create latest \
+            --title 'DS แลกเงินกีบ - APK ล่าสุด' \
+            --notes 'โหลดไฟล์ ds-entry.apk ด้านล่างไปติดตั้งบนแท็บเล็ตได้เลย' \
+            || true
+          gh release upload latest ds-entry.apk --clobber

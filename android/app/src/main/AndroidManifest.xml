@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      ไม่มี <uses-permission android:name="android.permission.INTERNET" /> โดยตั้งใจ
+      แอปนี้ต่ออินเทอร์เน็ตไม่ได้เลยแม้จะอยากต่อ - ข้อมูลลูกค้าและรูปสลิปออกจากเครื่องไม่ได้
+      ไฟล์ .xlsx เข้าถึงผ่านตัวเลือกไฟล์ของ Android (SAF) ซึ่งผู้ใช้เป็นคนเลือกเองทีละไฟล์
+    -->
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|density|smallestScreenSize"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

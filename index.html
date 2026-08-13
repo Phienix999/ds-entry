@@ -1,0 +1,2650 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<title>DS แลกเงินกีบ — กรอกข้อมูล</title>
+<style>
+/* Inter font local fallback */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('vendor/fonts/inter/inter-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('vendor/fonts/inter/inter-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('vendor/fonts/inter/inter-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('vendor/fonts/inter/inter-latin-700-normal.woff2') format('woff2')}
+
+/* Modern Theme Variables */
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel2: #f1f5f9;
+  --panel-hover: #e2e8f0;
+  --line: #e2e8f0;
+  --line2: #cbd5e1;
+  --text: #0f172a;
+  --body: #334155;
+  --dim: #64748b;
+  --mute: #94a3b8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+  --on-accent: #ffffff;
+  --good: #059669;
+  --warn: #d97706;
+  --bad: #dc2626;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --hId: #0284c7;
+  --hName: #d97706;
+  --hTime: #2563eb;
+  --hBaht: #059669;
+  --hEpay: #0891b2;
+  --font-sans: 'Inter', 'Noto Sans Thai', 'Leelawadee UI', -apple-system, system-ui, Arial, sans-serif;
+  --font-mono: 'Inter', var(--font-sans);
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 9999px;
+  --ease: .2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #090d16;
+  --panel: #131c2e;
+  --panel2: #1e293b;
+  --panel-hover: #2d3d59;
+  --line: #26334d;
+  --line2: #334155;
+  --text: #f8fafc;
+  --body: #cbd5e1;
+  --dim: #94a3b8;
+  --mute: #64748b;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-soft: rgba(59, 130, 246, 0.16);
+  --on-accent: #ffffff;
+  --good: #10b981;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+  --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(19, 28, 46, 0.85);
+  --hId: #38bdf8;
+  --hName: #fbbf24;
+  --hTime: #60a5fa;
+  --hBaht: #34d399;
+  --hEpay: #22d3ee;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--font-sans);font-size:14px;transition:background-color var(--ease),color var(--ease)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:none;outline:none}
+b,strong{font-weight:600;color:var(--text)}
+
+/* Topbar */
+.top{display:flex;align-items:center;gap:10px;padding:10px 18px;background:var(--glass-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);flex-wrap:wrap;position:sticky;top:0;z-index:20;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.brand{font-weight:700;font-size:17px;letter-spacing:-0.2px;white-space:nowrap;color:var(--text);display:flex;align-items:center;gap:8px}
+.brand .logo-icon{width:28px;height:28px;background:linear-gradient(135deg, var(--accent), #0891b2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(37,99,235,0.3)}
+.brand small{display:block;font-weight:400;font-size:11px;color:var(--dim)}
+.spacer{flex:1}
+.btn{background:var(--panel);border:1px solid var(--line2);border-radius:var(--r-sm);padding:7px 14px;font-weight:500;white-space:nowrap;color:var(--body);min-height:36px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all var(--ease);box-shadow:0 1px 2px rgba(0,0,0,0.03)}
+.btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--panel2);transform:translateY(-1px)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border-color:transparent;color:var(--on-accent);font-weight:600;box-shadow:0 2px 8px var(--accent-soft)}
+.btn.primary:hover:not(:disabled){background:linear-gradient(135deg, var(--accent-hover), var(--accent));color:var(--on-accent);box-shadow:0 4px 12px var(--accent-soft)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--dim);box-shadow:none}
+.btn.ghost:hover:not(:disabled){background:var(--panel2);border-color:transparent;color:var(--text)}
+.btn.icon-only{padding:7px 10px;min-width:36px}
+
+.pill{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 10px;font-size:12px;color:var(--dim);white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font-weight:500}
+.pill b{color:var(--text)}
+.pill.good{color:var(--good);background:color-mix(in srgb,var(--good) 10%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+.pill.warn{color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel));border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+.pill.bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel));border-color:color-mix(in srgb,var(--bad) 30%,transparent)}
+
+/* Tabs */
+#tabs{display:flex;gap:4px;padding:8px 18px 0;background:var(--panel);border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:transparent;border:none;border-radius:var(--r-sm) var(--r-sm) 0 0;padding:8px 16px;color:var(--dim);white-space:nowrap;font-weight:500;font-size:13px;box-shadow:inset 0 -2px 0 transparent;transition:all var(--ease)}
+.tab:hover{color:var(--text);background:var(--panel2)}
+.tab.on{color:var(--accent);font-weight:600;background:var(--accent-soft);box-shadow:inset 0 -2px 0 var(--accent)}
+
+/* Layout */
+.wrap{display:grid;grid-template-columns:390px 1fr;gap:18px;padding:18px;align-items:start}
+@media(max-width:1120px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--card-shadow);overflow:hidden;transition:background-color var(--ease),border-color var(--ease)}
+.card>h2{margin:0;padding:14px 18px;font-size:16px;letter-spacing:-0.1px;color:var(--text);font-weight:600;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card>.body{padding:18px}
+
+/* Form */
+.field{margin-bottom:14px}
+.field>label{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--dim);margin-bottom:6px;font-weight:500}
+.field input[type=text],.field input[type=number],.field input[type=date],.field select{
+  width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r-sm);padding:9px 12px;
+  color:var(--text);transition:all var(--ease);font-size:13.5px}
+.field input::placeholder{color:var(--mute)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);background:var(--panel);box-shadow:0 0 0 3px var(--accent-soft)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+.chipset{display:flex;gap:6px;flex-wrap:wrap}
+.chipset button{background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r-sm);padding:6px 12px;font-size:12.5px;font-weight:500;color:var(--body);transition:all var(--ease)}
+.chipset button:hover{border-color:var(--accent);color:var(--accent);background:var(--panel)}
+.chipset button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600;box-shadow:0 2px 4px var(--accent-soft)}
+.mini{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-size:12.5px;transition:all var(--ease)}
+.mini[open]{background:var(--panel);border-color:var(--line2)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:0px}
+.hint{font-size:11.5px;color:var(--mute);margin-top:5px;display:flex;align-items:center;gap:4px}
+.checkline{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);margin-top:8px;cursor:pointer;user-select:none}
+.checkline input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.actions{display:flex;gap:10px;margin-top:10px}
+.actions .btn{flex:1;justify-content:center}
+
+/* Table Section & Toolbar */
+.tbl-toolbar{display:flex;align-items:center;gap:10px;padding:10px 18px;background:var(--panel2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.search-box{position:relative;flex:1;min-width:200px}
+.search-box input{width:100%;padding:7px 10px 7px 32px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r-sm);font-size:13px;color:var(--text)}
+.search-box input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search-box .icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:13px;pointer-events:none}
+.filter-chips{display:flex;gap:4px;overflow-x:auto}
+.filter-chip{background:transparent;border:1px solid transparent;border-radius:var(--r-pill);padding:4px 10px;font-size:12px;color:var(--dim);font-weight:500;transition:all var(--ease);white-space:nowrap}
+.filter-chip:hover{color:var(--text);background:var(--panel-hover)}
+.filter-chip.active{background:var(--accent);color:#fff;font-weight:600}
+
+#tableWrap{max-height:calc(100vh - 270px);min-height:300px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+thead th{position:sticky;top:0;background:var(--panel);border-bottom:2px solid var(--line);padding:10px 10px;text-align:left;white-space:nowrap;font-size:12px;font-weight:600;color:var(--dim);z-index:2;letter-spacing:0.2px}
+thead th span.sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line);color:var(--body);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;transition:background-color var(--ease)}
+tbody td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-weight:500}
+tbody tr:hover{background:var(--panel2)}
+tbody tr.pending{background:color-mix(in srgb,var(--accent) 8%,var(--panel))}
+tbody tr.pending td:first-child::after{content:" ●";color:var(--accent);font-size:10px}
+td.act{text-align:right;white-space:nowrap}
+td.act button{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-sm);padding:3px 7px;color:var(--dim);transition:all var(--ease);margin-left:3px}
+td.act button:hover{border-color:var(--accent);color:var(--accent);background:var(--panel)}
+td.act button:disabled{opacity:.35;cursor:not-allowed}
+td.act button:disabled:hover{border-color:var(--line);color:var(--dim);background:var(--panel2)}
+tfoot td{padding:12px 10px;border-top:2px solid var(--line2);font-weight:600;background:var(--panel);color:var(--text);position:sticky;bottom:0;z-index:2}
+tfoot td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-size:14px;color:var(--accent)}
+
+/* Inline Cell Input */
+tbody td input.cell{width:100%;min-width:70px;background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:3px 7px;font:inherit;color:var(--text);transition:all var(--ease)}
+tbody td input.cell:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+tbody td input.cell.need{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
+tbody tr.ocr td:first-child::after{content:" 🖼";color:var(--accent)}
+tbody tr.del td{text-decoration:line-through;opacity:0.5;background:var(--panel2)}
+tbody tr.del td.act{text-decoration:none;opacity:1}
+
+#ocrBusy{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;background:var(--accent-soft);border-bottom:1px solid var(--line);color:var(--accent);font-weight:500}
+.spin{width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Welcome Screen */
+#welcome{max-width:800px;margin:50px auto;padding:0 20px;text-align:center}
+#welcome h1{font-size:36px;font-weight:700;margin:0 0 12px;letter-spacing:-0.5px;color:var(--text);line-height:1.2}
+#welcome p{color:var(--dim);line-height:1.6;font-size:15px}
+#welcome .drop{margin-top:28px;border:2px dashed var(--line2);border-radius:var(--r-lg);padding:50px 24px;background:var(--panel);transition:all var(--ease);box-shadow:var(--card-shadow)}
+#welcome .drop.over{border-color:var(--accent);background:var(--accent-soft);transform:scale(1.01)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:24px;font-size:12.5px;color:var(--dim)}
+.legend span{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);padding:4px 10px;border-radius:var(--r-pill);border:1px solid var(--line)}
+
+/* Toast & Notes */
+.toast{position:fixed;left:50%;bottom:-80px;transform:translateX(-50%);background:var(--text);border:1px solid var(--line2);border-radius:var(--r-md);padding:12px 24px;font-weight:500;color:var(--bg);box-shadow:0 10px 25px rgba(0,0,0,0.2);transition:all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:99;max-width:90vw;display:flex;align-items:center;gap:8px}
+.toast.show{bottom:26px}
+.toast.ok{background:var(--good);color:#fff;border-color:transparent}
+.toast.bad{background:var(--bad);color:#fff;border-color:transparent}
+.toast.warn{background:var(--warn);color:#fff;border-color:transparent}
+
+.note{background:var(--panel2);border:none;border-left:4px solid var(--line2);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;color:var(--body);margin:12px 18px;line-height:1.6;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
+.note.good{border-left-color:var(--good);background:color-mix(in srgb,var(--good) 8%,var(--panel2))}
+.note.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,var(--panel2))}
+.note.bad{border-left-color:var(--bad);background:color-mix(in srgb,var(--bad) 8%,var(--panel2))}
+.note .close{float:right;background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer;padding:0 4px}
+kbd{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:2px 6px;font-size:11px;font-family:var(--font-mono);color:var(--dim);box-shadow:0 1px 1px rgba(0,0,0,0.08)}
+
+/* Drop Overlay */
+#dropOverlay{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)}
+#dropOverlay.on{display:grid}
+#dropOverlay .inner{border:3px dashed var(--accent);border-radius:var(--r-lg);padding:60px 80px;text-align:center;background:var(--panel);max-width:80vw;color:var(--text);box-shadow:0 20px 40px rgba(0,0,0,0.3);animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+/* Floating Pending Action Bar */
+#floatingBar{position:fixed;right:24px;bottom:24px;z-index:50;display:none;align-items:center;gap:12px;padding:12px 20px;background:var(--panel);border:1px solid var(--accent);border-radius:var(--r-pill);box-shadow:0 10px 30px rgba(0,0,0,0.25);animation:slideUp .3s ease-out}
+#floatingBar.show{display:flex}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Shortcuts Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:100;display:none;place-items:center}
+.modal-backdrop.open{display:grid}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);width:90%;max-width:480px;padding:24px;box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+.modal h3{margin:0 0 16px;font-size:18px;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.shortcut-list{display:flex;flex-direction:column;gap:12px}
+.shortcut-item{display:flex;align-items:center;justify-content:space-between;font-size:13.5px;color:var(--body);padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+/* ปุ่มเลือกวิธีเปิดไฟล์บนหน้าต้อนรับ */
+.open-choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.open-choices .btn{font-size:15px;padding:14px 24px;min-height:52px}
+
+/* รายการไฟล์ที่เพิ่งใช้ (มีเฉพาะในแอป Android) */
+#recentList{display:flex;flex-direction:column;gap:6px;max-width:460px;margin:0 auto}
+.recent-row{display:flex;align-items:center;background:var(--panel2);
+  border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.recent-row:focus-within,.recent-row:hover{border-color:var(--accent)}
+.recent-row .open{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;
+  background:transparent;border:none;padding:12px 14px;min-height:56px;font:inherit;color:var(--body)}
+.recent-row .open .nm{flex:1;min-width:0;font-size:14px;font-weight:500;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-row .x{flex:none;color:var(--mute);font-size:16px;background:transparent;border:none;
+  min-width:46px;min-height:46px;margin-right:4px;border-radius:var(--r-sm)}
+.recent-row .x:hover{color:var(--bad);background:var(--panel)}
+
+/* ===================================================================
+   แท็บเล็ต / จอสัมผัส
+   =================================================================== */
+
+/* เอฟเฟกต์ hover ใช้เฉพาะเครื่องที่มีเมาส์จริง — บนจอสัมผัสมันจะค้าง */
+@media(hover:none){
+  .btn:hover:not(:disabled){transform:none}
+  tbody tr:hover{background:transparent}
+}
+
+/* กดด้วยนิ้วได้จริง: เป้ากดใหญ่ขึ้น และช่องกรอก 16px กันเบราว์เซอร์ซูมเอง */
+@media(pointer:coarse){
+  body{font-size:15px;-webkit-text-size-adjust:100%}
+  .btn{min-height:46px;padding:10px 16px;font-size:14.5px}
+  .btn.icon-only{min-width:46px;padding:10px 12px}
+  .field input[type=text],.field input[type=number],.field input[type=date],
+  .field select,.search-box input,tbody td input.cell{font-size:16px;padding:12px 14px;min-height:46px}
+  tbody td input.cell{padding:8px 10px;min-height:42px}
+  .chipset button{min-height:44px;padding:10px 16px;font-size:14px}
+  .filter-chip{min-height:40px;padding:8px 14px;font-size:13px}
+  .tab{min-height:46px;padding:12px 18px;font-size:14px}
+  .checkline{min-height:44px}
+  .checkline input{width:22px;height:22px}
+  td.act button{min-width:40px;min-height:40px;padding:8px 10px;font-size:15px}
+  tbody td{padding:12px 10px}
+  thead th{padding:12px 10px}
+  kbd{display:none}                       /* คีย์ลัดไม่มีความหมายบนแท็บเล็ต */
+  #shortcutBtn{display:none}
+  .actions .btn{min-height:52px;font-size:15px}
+}
+
+/* เผื่อขอบจอโค้ง/แถบระบบ เวลาเปิดเป็นแอปเต็มจอ */
+.top{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+.wrap{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+#floatingBar{right:max(24px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom))}
+
+/* จอแคบ (แท็บเล็ตแนวตั้ง / มือถือ) */
+@media(max-width:900px){
+  .top{gap:8px;padding:10px 12px}
+  .brand small{display:none}
+  .brand{font-size:15px}
+  .wrap{padding:12px;gap:12px}
+  .card>.body{padding:14px}
+  #welcome{margin:24px auto}
+  #welcome h1{font-size:26px}
+  #welcome .drop{padding:32px 16px}
+  #tableWrap{max-height:none;min-height:0}    /* ให้หน้าเลื่อนทั้งหน้าแทน */
+  .tbl-toolbar{padding:10px 12px}
+  .search-box{min-width:100%}
+  #floatingBar{left:12px;right:12px;justify-content:center}
+  .modal{max-height:88dvh;overflow:auto}
+}
+
+/* แท็บเล็ตแนวนอน (~1280×800) — แถบบนกินที่แนวตั้งเยอะ บีบให้เตี้ยลง */
+@media(max-width:1400px){
+  .brand small{display:none}
+  .top{gap:7px;padding-top:7px;padding-bottom:7px}
+  .btn{padding:6px 11px}
+  .pill{padding:3px 8px;font-size:11.5px}
+}
+
+/* จอสูงพอ ใช้ dvh กันแถบที่อยู่ของเบราว์เซอร์มือถือมาบังตาราง */
+@media(min-width:901px){
+  #tableWrap{max-height:calc(100dvh - 240px)}
+}
+
+/* ตารางกว้างเกินจอ — เลื่อนแนวนอนได้ในกล่องของมันเอง ไม่ดันทั้งหน้า */
+#tableWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">
+    <span class="logo-icon">DS</span>
+    <div>DS แลกเงินกีบ<small>โปรแกรมกรอกข้อมูลและสลิป Excel</small></div>
+  </div>
+  <span class="pill" id="fileName">ยังไม่ได้เปิดไฟล์</span>
+  <span class="pill" id="saveMode"></span>
+  <span class="pill" id="capacity"></span>
+  <span class="pill">รายชื่อที่จำได้ <b id="dirCount">0</b></span>
+  <span class="pill" id="ocrPill" hidden></span>
+  <span class="pill" id="blockPill" hidden></span>
+  <span class="pill" id="odPill" hidden title="บัญชี OneDrive ที่ล็อกอินอยู่"></span>
+  <div class="spacer"></div>
+  <span id="status" style="color:var(--dim);font-size:12px"></span>
+  <button class="btn ghost" id="installBtn" hidden title="ติดตั้งเป็นแอปบนหน้าจอ">⬇ ติดตั้งแอป</button>
+  <button class="btn ghost" id="offlineBtn" hidden
+          title="ดาวน์โหลดตัวอ่านสลิป (ราว 17 MB) เก็บไว้ในเครื่อง เพื่อให้อ่านสลิปได้ตอนไม่มีเน็ต">📥 เตรียมใช้ออฟไลน์</button>
+  <button class="btn icon-only" id="themeBtn" title="สลับโหมดสว่าง/มืด">🌙</button>
+  <button class="btn icon-only" id="shortcutBtn" title="วิธีใช้คีย์ลัด">⌨️</button>
+  <a class="btn ghost" href="slip-check.html" title="เปิดหน้าตรวจสลิปซ้ำ (แยกจากหน้านี้)">🔎 ตรวจสลิปซ้ำ</a>
+  <button class="btn ghost" id="backupBtn" title="ดาวน์โหลดสำเนาไฟล์ปัจจุบัน">⤓ สำรอง</button>
+  <button class="btn" id="openOdBtn" title="เลือกไฟล์ .xlsx จาก OneDrive">☁ เปิดจาก OneDrive</button>
+  <button class="btn" id="openBtn" title="เลือกไฟล์ .xlsx ในเครื่องนี้">📂 เปิดไฟล์</button>
+  <button class="btn primary" id="saveBtn" disabled>💾 บันทึกลงไฟล์ <kbd>Ctrl+S</kbd></button>
+</div>
+
+<div class="note warn" id="fsaNote" hidden>
+  เบราว์เซอร์นี้เขียนทับ<b>ไฟล์ในเครื่อง</b>โดยตรงไม่ได้ — ถ้าเปิดไฟล์จากเครื่อง เวลากดบันทึกจะเป็นการ<b>ดาวน์โหลดไฟล์ใหม่</b>ที่ชื่อเดิมแทน
+  แล้วต้องนำไปวางทับเอง<br>
+  บนแท็บเล็ตให้ใช้ปุ่ม <b>☁ เปิดจาก OneDrive</b> แทน — บันทึกกลับลงไฟล์เดิมได้ตามปกติ
+</div>
+
+<div id="welcome">
+  <h1>กรอกข้อมูลลงไฟล์ DS แลกเงินกีบ</h1>
+  <p>เปิดไฟล์ <b>.xlsx</b> ของคุณ แล้วกรอกผ่านฟอร์ม — โปรแกรมจะเขียนกลับลงชีตเดิม<br>
+     คงฟอนต์ Mali สีพื้นทุกคอลัมน์ เส้นขอบ ดรอปดาวน์ และสูตรผลรวมไว้ครบ</p>
+  <div class="drop" id="drop">
+    <div class="open-choices">
+      <button class="btn primary" id="openOdBtn2">☁ เปิดจาก OneDrive</button>
+      <button class="btn" id="openBtn2">📂 เลือกไฟล์ในเครื่อง</button>
+    </div>
+    <div id="recentWrap" hidden>
+      <div style="margin:22px 0 8px;font-size:13px;color:var(--dim);font-weight:500">ไฟล์ที่เพิ่งใช้</div>
+      <div id="recentList"></div>
+    </div>
+    <p style="margin-top:16px;font-size:14px" id="dropHint">หรือลากไฟล์มาวางตรงนี้</p>
+    <p style="margin-top:16px;font-size:13px;color:var(--dim);line-height:1.7">
+      เปิดไฟล์แล้ว <b>ลากรูปสลิปถอน</b> มาวางได้เลย (หรือ <kbd>Ctrl+V</kbd> หลังแคปหน้าจอ)<br>
+      โปรแกรมจะอ่าน <b>USD</b> ลงช่อง EPAY และ <b>Initiation / Arrival time</b> ลงช่องเวลาถอนให้อัตโนมัติ
+    </p>
+  </div>
+  <div class="legend">
+    <span><span class="swatch" style="background:#0284c7"></span>ID</span>
+    <span><span class="swatch" style="background:#d97706"></span>ชื่อ</span>
+    <span><span class="swatch" style="background:#2563eb"></span>เวลาถอน</span>
+    <span><span class="swatch" style="background:#059669"></span>ยอดTrue/Bank</span>
+    <span><span class="swatch" style="background:#0891b2"></span>ยอด EPAY</span>
+  </div>
+</div>
+
+<div class="note" id="saveResult" hidden></div>
+
+<div id="dropOverlay">
+  <div class="inner">
+    <div style="font-size:56px">🖼️</div>
+    <div style="font-size:24px;font-weight:600;margin-top:12px;color:var(--text)">วางรูปสลิปถอนได้เลย</div>
+    <div style="color:var(--dim);margin-top:8px;font-size:15px">อ่านยอด USD และเวลา Initiation / Arrival ให้อัตโนมัติ · วางหลายรูปพร้อมกันได้</div>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <div id="tabs"></div>
+
+  <div class="wrap">
+    <!-- ============================ ฟอร์ม ============================ -->
+    <div class="card">
+      <h2>📝 เพิ่มรายการ</h2>
+      <div class="body">
+
+        <div class="row2">
+          <div class="field">
+            <label for="f_date">วันที่ (คอลัมน์ A)</label>
+            <input type="date" id="f_date">
+          </div>
+          <div class="field">
+            <label>สถานะ (✔️/❌)</label>
+            <div class="chipset" data-target="#f_status">
+              <button type="button" data-val="✔️">✔️ สำเร็จ</button>
+              <button type="button" data-val="❌">❌ ไม่สำเร็จ</button>
+            </div>
+            <input type="hidden" id="f_status" value="✔️">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>แอป</label>
+          <div class="chipset" data-target="#f_app">
+            <button type="button" data-val="W">W</button>
+            <button type="button" data-val="L">L</button>
+            <button type="button" data-val="F">F</button>
+            <button type="button" data-val="OA">OA</button>
+          </div>
+          <input type="hidden" id="f_app" value="W">
+        </div>
+
+        <div class="field">
+          <label for="f_id"><span class="swatch" style="background:var(--hId)"></span>ID <span style="color:var(--dim);font-weight:400">— พิมพ์แล้วชื่อจะเติมเอง</span></label>
+          <input type="text" id="f_id" list="dlIds" inputmode="numeric" placeholder="เช่น 341342251" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="f_name"><span class="swatch" style="background:var(--hName)"></span>ชื่อ *</label>
+          <input type="text" id="f_name" list="dlNames" placeholder="ชื่อลูกค้า" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label><span class="swatch" style="background:var(--hTime)"></span>เวลาถอน</label>
+          <div class="row3">
+            <div>
+              <input type="text" id="t_from" placeholder="11.49" inputmode="decimal" autocomplete="off">
+              <div class="hint"><button type="button" class="btn ghost" id="nowFrom" style="padding:2px 8px;font-size:11px">ตอนนี้</button></div>
+            </div>
+            <div>
+              <input type="text" id="t_to" placeholder="11.52" inputmode="decimal" autocomplete="off">
+              <div class="hint"><button type="button" class="btn ghost" id="nowTo" style="padding:2px 8px;font-size:11px">ตอนนี้</button></div>
+            </div>
+            <button type="button" class="btn ghost" id="sameTime" style="margin-bottom:22px" title="ให้เวลาจบเท่ากับเวลาเริ่ม">=</button>
+          </div>
+          <input type="text" id="f_time" placeholder="หรือพิมพ์เอง เช่น 11.49-11.52 / แลกเงินกีบ" style="margin-top:6px" autocomplete="off">
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="f_thtime">เวลายอดไทย</label>
+            <input type="text" id="f_thtime" placeholder="เช่น 7.12" inputmode="decimal" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="f_note">หมายเหตุ</label>
+            <input type="text" id="f_note" list="dlNotes" placeholder="ว่างได้" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f_baht"><span class="swatch" style="background:var(--hBaht)"></span>ยอด True/Bank (บาท)</label>
+          <div class="chipset" id="baht_chips" data-target="#f_baht" style="margin-bottom:7px">
+            <button type="button" data-val="658">658</button>
+            <button type="button" data-val="1316">1,316</button>
+            <button type="button" data-val="3290">3,290</button>
+            <button type="button" data-val="6580">6,580</button>
+            <button type="button" data-val="13160">13,160</button>
+          </div>
+          <input type="text" id="f_baht" inputmode="decimal" placeholder="กรอกเอง" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <label for="f_epay"><span class="swatch" style="background:var(--hEpay)"></span>ยอด EPAY (USD) — คิดให้อัตโนมัติ</label>
+          <input type="text" id="f_epay" inputmode="decimal" placeholder="คำนวณจากยอดบาท" autocomplete="off">
+          <label class="checkline"><input type="checkbox" id="noEpay"> ไม่ใส่ EPAY (รายการแลกเงินกีบ / โอนเพชร)</label>
+        </div>
+
+        <details class="mini" style="margin-bottom:12px">
+          <summary style="cursor:pointer;color:var(--dim);font-weight:500">⚙️ การอ่านสลิปไทย</summary>
+          <div style="margin-top:10px">
+            <label style="font-size:11.5px;color:var(--dim)">เวลาที่ทำรายการ ให้ลงช่อง</label>
+            <select id="thaiTimeTo" style="margin-top:4px">
+              <option value="time" selected>เวลาถอน (เช่น 09.37-09.37)</option>
+              <option value="thTime">เวลายอดไทย (เช่น 9.37)</option>
+            </select>
+            <div class="hint">สลิปไทยจะลงยอดบาทให้ และเว้น EPAY ไว้ ตามรูปแบบที่ไฟล์ใช้อยู่</div>
+          </div>
+        </details>
+
+        <details class="mini" style="margin-bottom:14px">
+          <summary style="cursor:pointer;color:var(--dim);font-weight:500">💱 อัตราแลกเปลี่ยนที่ใช้คำนวณ EPAY</summary>
+          <div class="row2" style="margin-top:10px">
+            <div><label style="font-size:11.5px;color:var(--dim)">บาท</label>
+              <input type="text" id="rateBaht" value="658"></div>
+            <div><label style="font-size:11.5px;color:var(--dim)">= USD</label>
+              <input type="text" id="rateUsd" value="19.8"></div>
+          </div>
+          <div class="hint" id="rateInfo"></div>
+        </details>
+
+        <div class="actions">
+          <button class="btn primary" id="addBtn">➕ เพิ่มลงคิว <kbd>Ctrl+Enter</kbd></button>
+          <button class="btn" id="clearBtn">ล้าง</button>
+        </div>
+        <label class="checkline"><input type="checkbox" id="backup" checked> ดาวน์โหลดไฟล์สำรองก่อนบันทึกทุกครั้ง</label>
+      </div>
+    </div>
+
+    <!-- ============================ ตาราง ============================ -->
+    <div class="card">
+      <h2>📊 รายการในชีต
+        <span class="pill">ทั้งหมด <b id="cntAll">0</b></span>
+        <span class="pill warn">ยังไม่บันทึก <b id="cntPending">0</b></span>
+        <span class="pill bad" id="delPill" hidden>รอลบ <b id="cntDel">0</b></span>
+        <span class="spacer"></span>
+      </h2>
+
+      <!-- Toolbar ค้นหา & ฟิลเตอร์ -->
+      <div class="tbl-toolbar">
+        <div class="search-box">
+          <span class="icon">🔍</span>
+          <input type="text" id="tblSearch" placeholder="ค้นหา ID, ชื่อลูกค้า, หรือหมายเหตุในตาราง...">
+        </div>
+        <div class="filter-chips">
+          <button type="button" class="filter-chip active" data-filter="all">ทั้งหมด</button>
+          <button type="button" class="filter-chip" data-filter="pending">ยังไม่บันทึก (เหลือง)</button>
+          <button type="button" class="filter-chip" data-filter="success">สำเร็จ ✔️</button>
+          <button type="button" class="filter-chip" data-filter="failed">ไม่สำเร็จ ❌</button>
+          <button type="button" class="filter-chip" data-filter="del">รอลบ 🗑</button>
+        </div>
+      </div>
+
+      <div id="ocrBusy" hidden><span class="spin"></span><span id="ocrBusyText"></span></div>
+
+      <div id="tableWrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>วันที่</th><th>หมายเหตุ</th><th>✔️/❌</th><th>แอป</th>
+            <th><span class="sw" style="background:var(--hId)"></span>ID</th>
+            <th><span class="sw" style="background:var(--hName)"></span>ชื่อ</th>
+            <th><span class="sw" style="background:var(--hTime)"></span>เวลาถอน</th>
+            <th>เวลายอดไทย</th>
+            <th><span class="sw" style="background:var(--hBaht)"></span>ยอดบาท</th>
+            <th><span class="sw" style="background:var(--hEpay)"></span>EPAY</th>
+            <th></th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+          <tfoot><tr>
+            <td colspan="9">รวม</td>
+            <td class="num" id="sumBaht">0</td>
+            <td class="num" id="sumEpay">0</td>
+            <td></td>
+          </tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Action Bar สำหรับบันทึกด่วน -->
+<div id="floatingBar">
+  <span style="font-size:13.5px;font-weight:500;color:var(--text)">⏳ มี <b id="floatCount" style="color:var(--accent)">0</b> รายการรอยืนยัน</span>
+  <button class="btn primary" id="floatSaveBtn">💾 บันทึกลงไฟล์ <kbd>Ctrl+S</kbd></button>
+</div>
+
+<!-- Modal วิธีใช้คีย์ลัด -->
+<div class="modal-backdrop" id="shortcutModal">
+  <div class="modal">
+    <h3>⌨️ วิธีใช้คีย์ลัด (Keyboard Shortcuts) <button class="btn ghost icon-only" id="closeShortcutBtn">✕</button></h3>
+    <div class="shortcut-list">
+      <div class="shortcut-item"><span>เพิ่มรายการฟอร์มเข้าคิว</span> <span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span></div>
+      <div class="shortcut-item"><span>บันทึกข้อมูลลงไฟล์ Excel</span> <span><kbd>Ctrl</kbd> + <kbd>S</kbd></span></div>
+      <div class="shortcut-item"><span>วางรูปสลิปจากแคปหน้าจอ</span> <span><kbd>Ctrl</kbd> + <kbd>V</kbd></span></div>
+      <div class="shortcut-item"><span>ล้างฟอร์ม / ปิดป๊อปอัป</span> <span><kbd>Esc</kbd></span></div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="filePick" accept=".xlsx" hidden>
+<datalist id="dlIds"></datalist>
+<datalist id="dlNames"></datalist>
+<datalist id="dlNotes">
+  <option value="โอนเพชร"><option value="แลกเงินกีบ"><option value="ถอนEmma">
+</datalist>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="lib/android.js"></script>
+<script src="lib/auth.js"></script>
+<script src="lib/graph.js"></script>
+<script src="lib/picker.js"></script>
+<script src="lib/store.js"></script>
+<script src="lib/pwa.js"></script>
+<script src="vendor/tesseract/tesseract.min.js"></script>
+<script>
+/* =========================================================================
+   อ่าน/เขียนไฟล์ .xlsx เดิมโดยตรง (ZIP + OOXML) ไม่ใช้ไลบรารีภายนอก
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- CRC32 */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[i] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(u8) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+/* --------------------------------------------------------- deflate/inflate */
+async function inflateRaw(u8) {
+  const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+async function deflateRaw(u8) {
+  const s = new Blob([u8]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+
+/* ------------------------------------------------------------- ZIP I/O */
+function readZip(buf) {
+  const u8 = new Uint8Array(buf);
+  const dv = new DataView(buf);
+  let eocd = -1;
+  const start = Math.max(0, u8.length - 65557);
+  for (let i = u8.length - 22; i >= start; i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) throw new Error('ไม่พบโครงสร้าง ZIP (ไฟล์อาจไม่ใช่ .xlsx)');
+  const total = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true);
+  const entries = [];
+  for (let n = 0; n < total; n++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) throw new Error('central directory ผิดรูปแบบ');
+    const method = dv.getUint16(p + 10, true);
+    const crc = dv.getUint32(p + 16, true);
+    const compSize = dv.getUint32(p + 20, true);
+    const uncompSize = dv.getUint32(p + 24, true);
+    const fnLen = dv.getUint16(p + 28, true);
+    const exLen = dv.getUint16(p + 30, true);
+    const cmLen = dv.getUint16(p + 32, true);
+    const lho = dv.getUint32(p + 42, true);
+    const name = new TextDecoder('utf-8').decode(u8.subarray(p + 46, p + 46 + fnLen));
+    const lFnLen = dv.getUint16(lho + 26, true);
+    const lExLen = dv.getUint16(lho + 28, true);
+    const dataStart = lho + 30 + lFnLen + lExLen;
+    entries.push({ name, method, crc, compSize, uncompSize,
+                   comp: u8.subarray(dataStart, dataStart + compSize) });
+    p += 46 + fnLen + exLen + cmLen;
+  }
+  return entries;
+}
+
+async function entryText(e) {
+  const raw = e.method === 0 ? e.comp : await inflateRaw(e.comp);
+  return new TextDecoder('utf-8').decode(raw);
+}
+
+async function writeZip(entries) {
+  const enc = new TextEncoder();
+  const chunks = [], cdRecs = [];
+  let offset = 0;
+  for (const e of entries) {
+    const nameBytes = enc.encode(e.name);
+    const lh = new Uint8Array(30 + nameBytes.length);
+    const d = new DataView(lh.buffer);
+    d.setUint32(0, 0x04034b50, true);
+    d.setUint16(4, 20, true);
+    d.setUint16(6, 0x0800, true);
+    d.setUint16(8, e.method, true);
+    d.setUint16(10, 0, true);
+    d.setUint16(12, 0x21, true);
+    d.setUint32(14, e.crc, true);
+    d.setUint32(18, e.compSize, true);
+    d.setUint32(22, e.uncompSize, true);
+    d.setUint16(26, nameBytes.length, true);
+    d.setUint16(28, 0, true);
+    lh.set(nameBytes, 30);
+
+    const cd = new Uint8Array(46 + nameBytes.length);
+    const c = new DataView(cd.buffer);
+    c.setUint32(0, 0x02014b50, true);
+    c.setUint16(4, 20, true);  c.setUint16(6, 20, true);
+    c.setUint16(8, 0x0800, true);
+    c.setUint16(10, e.method, true);
+    c.setUint16(12, 0, true);  c.setUint16(14, 0x21, true);
+    c.setUint32(16, e.crc, true);
+    c.setUint32(20, e.compSize, true);
+    c.setUint32(24, e.uncompSize, true);
+    c.setUint16(28, nameBytes.length, true);
+    c.setUint32(42, offset, true);
+    cd.set(nameBytes, 46);
+    cdRecs.push(cd);
+
+    chunks.push(lh, e.comp);
+    offset += lh.length + e.comp.length;
+  }
+  const cdOffset = offset;
+  let cdSize = 0;
+  for (const r of cdRecs) { chunks.push(r); cdSize += r.length; }
+  const eocd = new Uint8Array(22);
+  const ev = new DataView(eocd.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, cdRecs.length, true);
+  ev.setUint16(10, cdRecs.length, true);
+  ev.setUint32(12, cdSize, true);
+  ev.setUint32(16, cdOffset, true);
+  chunks.push(eocd);
+  return new Blob(chunks, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+
+/* =================== customers.xlsx — ไฟล์รายชื่อ ID ↔ ชื่อ แยกต่างหาก =================== */
+async function parseCustomersXlsx(buf){
+  const map = new Map();
+  try {
+    const entries = readZip(buf);
+    const byName = new Map(entries.map(e => [e.name, e]));
+    let sst = [];
+    if (byName.has('xl/sharedStrings.xml')) {
+      const doc = new DOMParser().parseFromString(await entryText(byName.get('xl/sharedStrings.xml')), 'application/xml');
+      sst = Array.from(doc.getElementsByTagName('si')).map(si => {
+        let s = ''; for (const t of si.getElementsByTagName('t')) s += t.textContent; return s;
+      });
+    }
+    const wbDoc  = new DOMParser().parseFromString(await entryText(byName.get('xl/workbook.xml')), 'application/xml');
+    const relDoc = new DOMParser().parseFromString(await entryText(byName.get('xl/_rels/workbook.xml.rels')), 'application/xml');
+    const rels = new Map();
+    for (const r of relDoc.getElementsByTagName('Relationship')) rels.set(r.getAttribute('Id'), r.getAttribute('Target'));
+    const shEl = wbDoc.getElementsByTagName('sheet')[0];
+    const rid = shEl.getAttribute('r:id')
+      || shEl.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');
+    const target = rels.get(rid);
+    const path = target.startsWith('/') ? target.slice(1) : 'xl/' + target;
+    const sheetDoc = new DOMParser().parseFromString(await entryText(byName.get(path)), 'application/xml');
+
+    const cellText = (c) => {
+      if (!c) return null;
+      const t = c.getAttribute('t');
+      if (t === 'inlineStr') {
+        const is = c.getElementsByTagName('is')[0]; if (!is) return null;
+        let s = ''; for (const x of is.getElementsByTagName('t')) s += x.textContent; return s;
+      }
+      const v = c.getElementsByTagName('v')[0]; if (!v) return null;
+      const raw = v.textContent;
+      if (t === 's') return sst[+raw] ?? '';
+      return raw;
+    };
+
+    for (const row of sheetDoc.getElementsByTagName('row')) {
+      if (+row.getAttribute('r') <= 1) continue;
+      let idVal = null, nameVal = null;
+      for (const c of row.getElementsByTagName('c')) {
+        const col = splitRef(c.getAttribute('r'))[0];
+        if (col === 'A') idVal = cellText(c);
+        else if (col === 'B') nameVal = cellText(c);
+      }
+      if (idVal != null && String(idVal).trim() !== '' && nameVal) {
+        map.set(String(idVal).trim(), String(nameVal).trim());
+      }
+    }
+  } catch (e) { console.warn('อ่าน customers.xlsx ไม่สำเร็จ', e); }
+  return map;
+}
+
+async function buildCustomersXlsxBlob(map){
+  const enc = new TextEncoder();
+  const mkEntry = (name, text) => {
+    const bytes = enc.encode(text);
+    return { name, method: 0, crc: crc32(bytes), compSize: bytes.length, uncompSize: bytes.length, comp: bytes };
+  };
+  const CT = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+    + '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+    + '<Default Extension="xml" ContentType="application/xml"/>'
+    + '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+    + '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+    + '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+    + '</Types>';
+  const RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+    + '</Relationships>';
+  const WB = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+    + '<sheets><sheet name="Customers" sheetId="1" r:id="rId1"/></sheets></workbook>';
+  const WBRELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+    + '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+    + '</Relationships>';
+  const STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    + '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    + '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>'
+    + '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>'
+    + '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
+    + '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+    + '<cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+    + '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs>'
+    + '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+    + '</styleSheet>';
+
+  const NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+  const doc = new DOMParser().parseFromString(
+    '<worksheet xmlns="' + NS + '"><cols>'
+    + '<col min="1" max="1" width="14" customWidth="1"/><col min="2" max="2" width="28" customWidth="1"/>'
+    + '</cols><sheetData/></worksheet>', 'application/xml');
+  const sd = doc.getElementsByTagName('sheetData')[0];
+  const addRow = (rn, id, name, bold) => {
+    const row = doc.createElementNS(NS, 'row'); row.setAttribute('r', String(rn));
+    const mk = (col, text) => {
+      const c = doc.createElementNS(NS, 'c'); c.setAttribute('r', col + rn); c.setAttribute('t', 'inlineStr');
+      if (bold) c.setAttribute('s', '1');
+      const is = doc.createElementNS(NS, 'is'); const t = doc.createElementNS(NS, 't');
+      t.setAttribute('xml:space', 'preserve'); t.textContent = text;
+      is.appendChild(t); c.appendChild(is); row.appendChild(c);
+    };
+    mk('A', id); mk('B', name);
+    sd.appendChild(row);
+  };
+  addRow(1, 'ID', 'ชื่อ', true);
+  const sorted = [...map.entries()].sort((a, b) => {
+    const na = Number(a[0]), nb = Number(b[0]);
+    if (Number.isFinite(na) && Number.isFinite(nb)) return na - nb;
+    return a[0].localeCompare(b[0]);
+  });
+  let rn = 2;
+  for (const [id, nm] of sorted) addRow(rn++, id, nm, false);
+  const sheetXml = new XMLSerializer().serializeToString(doc);
+
+  return writeZip([
+    mkEntry('[Content_Types].xml', CT),
+    mkEntry('_rels/.rels', RELS),
+    mkEntry('xl/workbook.xml', WB),
+    mkEntry('xl/_rels/workbook.xml.rels', WBRELS),
+    mkEntry('xl/styles.xml', STYLES),
+    mkEntry('xl/worksheets/sheet1.xml', sheetXml),
+  ]);
+}
+
+/* --------------------------------------------------------- A1 / วันที่ */
+function colToNum(c){let n=0;for(const ch of c)n=n*26+(ch.charCodeAt(0)-64);return n;}
+function numToCol(n){let s='';while(n>0){const r=(n-1)%26;s=String.fromCharCode(65+r)+s;n=(n-1-r)/26;}return s;}
+function splitRef(r){const m=/^([A-Z]+)(\d+)$/.exec(r);return m?[m[1],+m[2]]:[null,null];}
+
+const EXCEL_EPOCH = Date.UTC(1899, 11, 30);
+function dateToSerial(iso){
+  if(!iso) return null;
+  const [y,m,d] = iso.split('-').map(Number);
+  return Math.round((Date.UTC(y, m-1, d) - EXCEL_EPOCH) / 86400000);
+}
+function serialToDate(s){
+  if (s == null || s === '') return '';
+  const dt = new Date(EXCEL_EPOCH + Math.round(Number(s)) * 86400000);
+  const p = n => String(n).padStart(2,'0');
+  return dt.getUTCFullYear()+'-'+p(dt.getUTCMonth()+1)+'-'+p(dt.getUTCDate());
+}
+function fmtDateTH(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-'); return (+d)+'/'+(+m)+'/'+y; }
+
+/* ============================ โครงสร้างเวิร์กบุ๊ก ========================= */
+const FIELDS = ['note','status','app','id','name','time','thTime','baht','epay'];
+const STYLE = { date:10, note:13, status:13, app:65, id:70, name:71, time:69, thTime:44, baht:72, epay:46 };
+const XLNS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
+class Workbook {
+  constructor(){ this.entries=null; this.parts=new Map(); this.sheets=[]; this.sst=[]; this.fileName='';
+                 this.styleCount=1; this.repaired=0; }
+
+  async load(buf, fileName){
+    this.entries = readZip(buf);
+    this.fileName = fileName;
+    const byName = new Map(this.entries.map(e => [e.name, e]));
+
+    const parse = async (path) => {
+      const e = byName.get(path);
+      if (!e) throw new Error('ไม่พบส่วน ' + path + ' ในไฟล์');
+      const doc = new DOMParser().parseFromString(await entryText(e), 'application/xml');
+      if (doc.querySelector('parsererror')) throw new Error('อ่าน XML ไม่สำเร็จ: ' + path);
+      this.parts.set(path, { doc, dirty:false });
+      return doc;
+    };
+
+    if (byName.has('xl/sharedStrings.xml')) {
+      const d = await parse('xl/sharedStrings.xml');
+      this.sst = Array.from(d.getElementsByTagName('si')).map(si => {
+        let s = ''; for (const t of si.getElementsByTagName('t')) s += t.textContent; return s;
+      });
+    }
+
+    this.styleCount = 1;
+    if (byName.has('xl/styles.xml')) {
+      const sd = await parse('xl/styles.xml');
+      const cellXfs = sd.getElementsByTagName('cellXfs')[0];
+      if (cellXfs) this.styleCount = cellXfs.getElementsByTagName('xf').length || 1;
+    }
+
+    const wbDoc  = await parse('xl/workbook.xml');
+    const relDoc = await parse('xl/_rels/workbook.xml.rels');
+    const rels = new Map();
+    for (const r of relDoc.getElementsByTagName('Relationship'))
+      rels.set(r.getAttribute('Id'), r.getAttribute('Target'));
+
+    this.sheets = [];
+    this.repaired = 0;
+    for (const sh of wbDoc.getElementsByTagName('sheet')) {
+      const rid = sh.getAttribute('r:id')
+        || sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');
+      const target = rels.get(rid);
+      if (!target) continue;
+      const path = target.startsWith('/') ? target.slice(1) : 'xl/' + target;
+      const doc = await parse(path);
+      const sheet = { name: sh.getAttribute('name'), path, doc };
+      this._indexSheet(sheet);
+      this.sheets.push(sheet);
+    }
+    if (!this.sheets.length) throw new Error('ไม่พบชีตในไฟล์');
+  }
+
+  findValidStyleAnywhere(field){
+    for (const sh of this.sheets) {
+      for (const b of sh.blocks) {
+        const v = b.styles && b.styles[field];
+        if (v != null && v < this.styleCount) return v;
+      }
+    }
+    return null;
+  }
+
+  _indexSheet(sheet){
+    sheet.rows = new Map();
+    for (const r of sheet.doc.getElementsByTagName('row')) sheet.rows.set(+r.getAttribute('r'), r);
+
+    sheet.blocks = [];
+    const head = sheet.rows.get(2);
+    if (head) for (const c of head.getElementsByTagName('c')) {
+      const v = this.cellValue(c);
+      if (typeof v === 'string' && v.trim() === 'หมายเหตุ')
+        sheet.blocks.push({ noteCol: colToNum(splitRef(c.getAttribute('r'))[0]) });
+    }
+    if (!sheet.blocks.length) sheet.blocks.push({ noteCol: 2 });
+
+    const baht0 = sheet.blocks[0].noteCol + 7;
+    sheet.totalRow = null;
+    for (const rn of Array.from(sheet.rows.keys()).filter(n=>n>2).sort((a,b)=>a-b)) {
+      const c = this.getCell(sheet, rn, baht0, false);
+      const f = c && c.getElementsByTagName('f')[0];
+      if (f && /^SUM\(/i.test(f.textContent || '')) { sheet.totalRow = rn; break; }
+    }
+    if (!sheet.totalRow) sheet.totalRow = 103;
+
+    for (const b of sheet.blocks) {
+      b.firstRow = 3; b.lastRow = sheet.totalRow - 1;
+      const c = this.getCell(sheet, sheet.totalRow, b.noteCol + 7, false);
+      const f = c && c.getElementsByTagName('f')[0];
+      const m = f && /SUM\([A-Z]+(\d+):[A-Z]+(\d+)\)/i.exec(f.textContent || '');
+      if (m) { b.firstRow = +m[1]; b.lastRow = +m[2]; }
+      b.cols = {};
+      FIELDS.forEach((f2,i) => { b.cols[f2] = b.noteCol + i; });
+      b.cols.date = b.noteCol - 1;
+
+      const styleAt = (col) => {
+        for (let rn = b.firstRow; rn <= b.lastRow; rn++) {
+          const cell = this.getCell(sheet, rn, col, false);
+          const s = cell && cell.getAttribute('s');
+          if (s === null || s === undefined || s === '') continue;
+          const n = +s;
+          if (n < this.styleCount) return n;
+        }
+        return null;
+      };
+      b.styles = {};
+      FIELDS.forEach(f2 => {
+        b.styles[f2] = styleAt(b.cols[f2]) ?? this.findValidStyleAnywhere(f2)
+          ?? (STYLE[f2] < this.styleCount ? STYLE[f2] : 0);
+      });
+      b.styles.date = styleAt(b.cols.date) ?? this.findValidStyleAnywhere('date')
+        ?? (STYLE.date < this.styleCount ? STYLE.date : 0);
+
+      for (let rn = b.firstRow; rn <= b.lastRow; rn++) {
+        for (const f2 of FIELDS) {
+          const col = b.cols[f2];
+          const cell = this.getCell(sheet, rn, col, false);
+          if (!cell) continue;
+          const s = cell.getAttribute('s');
+          if (s !== null && s !== '' && +s >= this.styleCount) {
+            cell.setAttribute('s', String(b.styles[f2]));
+            this.parts.get(sheet.path).dirty = true;
+            this.repaired++;
+          }
+        }
+        const dcell = this.getCell(sheet, rn, b.cols.date, false);
+        if (dcell) {
+          const s = dcell.getAttribute('s');
+          if (s !== null && s !== '' && +s >= this.styleCount) {
+            dcell.setAttribute('s', String(b.styles.date));
+            this.parts.get(sheet.path).dirty = true;
+            this.repaired++;
+          }
+        }
+      }
+    }
+  }
+
+  cellValue(c){
+    if (!c) return null;
+    const t = c.getAttribute('t');
+    if (t === 'inlineStr') {
+      const is = c.getElementsByTagName('is')[0];
+      if (!is) return null;
+      let s=''; for (const x of is.getElementsByTagName('t')) s += x.textContent; return s;
+    }
+    const v = c.getElementsByTagName('v')[0];
+    if (!v) return null;
+    const raw = v.textContent;
+    if (t === 's')   return this.sst[+raw] ?? '';
+    if (t === 'str') return raw;
+    if (t === 'b')   return raw === '1';
+    if (raw === '')  return null;
+    const n = Number(raw);
+    return Number.isNaN(n) ? raw : n;
+  }
+
+  getCell(sheet, rowNum, colNum, create = true){
+    let row = sheet.rows.get(rowNum);
+    if (!row) {
+      if (!create) return null;
+      row = sheet.doc.createElementNS(XLNS,'row');
+      row.setAttribute('r', String(rowNum));
+      const sd = sheet.doc.getElementsByTagName('sheetData')[0];
+      let ref = null;
+      for (const r of sd.getElementsByTagName('row')) if (+r.getAttribute('r') > rowNum) { ref = r; break; }
+      sd.insertBefore(row, ref);
+      sheet.rows.set(rowNum, row);
+    }
+    const want = numToCol(colNum) + rowNum;
+    let ref = null;
+    for (const c of row.getElementsByTagName('c')) {
+      const cr = c.getAttribute('r');
+      if (cr === want) return c;
+      if (colToNum(splitRef(cr)[0]) > colNum) { ref = c; break; }
+    }
+    if (!create) return null;
+    const c = sheet.doc.createElementNS(XLNS,'c');
+    c.setAttribute('r', want);
+    row.insertBefore(c, ref);
+    return c;
+  }
+
+  setCell(sheet, rowNum, colNum, value, styleId){
+    const c = this.getCell(sheet, rowNum, colNum, true);
+    while (c.firstChild) c.removeChild(c.firstChild);
+    c.removeAttribute('t');
+    if (styleId != null) c.setAttribute('s', String(styleId));
+    this.parts.get(sheet.path).dirty = true;
+    if (value === null || value === undefined || value === '') return;
+    if (typeof value === 'number') {
+      const v = sheet.doc.createElementNS(XLNS,'v');
+      v.textContent = String(value);
+      c.appendChild(v);
+    } else {
+      c.setAttribute('t','inlineStr');
+      const is = sheet.doc.createElementNS(XLNS,'is');
+      const t  = sheet.doc.createElementNS(XLNS,'t');
+      t.setAttribute('xml:space','preserve');
+      t.textContent = String(value);
+      is.appendChild(t); c.appendChild(is);
+    }
+  }
+
+  readRows(sheet){
+    const out = [];
+    sheet.blocks.forEach((b, bi) => {
+      for (let rn = b.firstRow; rn <= b.lastRow; rn++) {
+        const rec = { _row: rn, _block: bi };
+        let any = false;
+        for (const f of FIELDS) {
+          const v = this.cellValue(this.getCell(sheet, rn, b.cols[f], false));
+          rec[f] = v == null ? '' : v;
+          if (rec[f] !== '') any = true;
+        }
+        const dv = this.cellValue(this.getCell(sheet, rn, b.cols.date, false));
+        rec.date = typeof dv === 'number' ? serialToDate(dv) : '';
+        if (any) out.push(rec);
+      }
+    });
+    return out;
+  }
+
+  rowHasData(sheet, b, rn){
+    for (const f of FIELDS) {
+      const v = this.cellValue(this.getCell(sheet, rn, b.cols[f], false));
+      if (v !== null && v !== '') return true;
+    }
+    return false;
+  }
+
+  nextFreeSlot(sheet, used){
+    for (let bi = 0; bi < sheet.blocks.length; bi++) {
+      const b = sheet.blocks[bi];
+      for (let rn = b.firstRow; rn <= b.lastRow; rn++) {
+        const key = bi + ':' + rn;
+        if (used.has(key)) continue;
+        if (!this.rowHasData(sheet, b, rn)) { used.add(key); return { block: bi, row: rn }; }
+      }
+    }
+    return null;
+  }
+
+  clearRow(sheet, b, rn){
+    this.setCell(sheet, rn, b.cols.date, '', b.styles.date);
+    for (const f of FIELDS) this.setCell(sheet, rn, b.cols[f], '', b.styles[f]);
+  }
+
+  deleteRows(sheet, keys){
+    const byBlock = new Map();
+    for (const k of keys) {
+      const [bi, rn] = k.split(':').map(Number);
+      if (!byBlock.has(bi)) byBlock.set(bi, new Set());
+      byBlock.get(bi).add(rn);
+    }
+    for (const [bi, rows] of byBlock) {
+      const b = sheet.blocks[bi];
+      const from = Math.min(...rows);
+      const keep = [];
+      for (let rn = from; rn <= b.lastRow; rn++) {
+        if (rows.has(rn)) continue;
+        if (!this.rowHasData(sheet, b, rn)) continue;
+        const rec = { _row: rn };
+        for (const f of FIELDS) {
+          const v = this.cellValue(this.getCell(sheet, rn, b.cols[f], false));
+          rec[f] = v == null ? '' : v;
+        }
+        const dv = this.cellValue(this.getCell(sheet, rn, b.cols.date, false));
+        rec.date = typeof dv === 'number' ? serialToDate(dv) : '';
+        keep.push(rec);
+      }
+      for (let rn = from; rn <= b.lastRow; rn++) this.clearRow(sheet, b, rn);
+      let rn = from;
+      for (const rec of keep) this.writeRecord(sheet, { block: bi, row: rn++ }, rec);
+    }
+  }
+
+  writeRecord(sheet, slot, rec){
+    const b = sheet.blocks[slot.block], rn = slot.row;
+    this.setCell(sheet, rn, b.cols.date,   rec.date ? dateToSerial(rec.date) : '', b.styles.date);
+    this.setCell(sheet, rn, b.cols.note,   rec.note || '',   b.styles.note);
+    this.setCell(sheet, rn, b.cols.status, rec.status || '', b.styles.status);
+    this.setCell(sheet, rn, b.cols.app,    rec.app || '',    b.styles.app);
+    this.setCell(sheet, rn, b.cols.id,     rec.id === '' ? '' : Number(rec.id), b.styles.id);
+    this.setCell(sheet, rn, b.cols.name,   rec.name || '',   b.styles.name);
+    this.setCell(sheet, rn, b.cols.time,   rec.time || '',   b.styles.time);
+    this.setCell(sheet, rn, b.cols.thTime, rec.thTime === '' ? '' : Number(rec.thTime), b.styles.thTime);
+    this.setCell(sheet, rn, b.cols.baht,   rec.baht === ''   ? '' : Number(rec.baht),   b.styles.baht);
+    this.setCell(sheet, rn, b.cols.epay,   rec.epay === ''   ? '' : Number(rec.epay),   b.styles.epay);
+  }
+
+  refreshTotals(sheet){
+    const tr = sheet.totalRow;
+    for (const b of sheet.blocks) {
+      let sb = 0, se = 0;
+      for (let rn = b.firstRow; rn <= b.lastRow; rn++) {
+        const v1 = this.cellValue(this.getCell(sheet, rn, b.cols.baht, false));
+        const v2 = this.cellValue(this.getCell(sheet, rn, b.cols.epay, false));
+        if (typeof v1 === 'number') sb += v1;
+        if (typeof v2 === 'number') se += v2;
+      }
+      this._cache(sheet, tr, b.cols.baht, sb);
+      this._cache(sheet, tr, b.cols.epay, se);
+    }
+    for (let rn = tr + 1; rn <= tr + 8; rn++) {
+      const row = sheet.rows.get(rn);
+      if (!row) continue;
+      for (const c of row.getElementsByTagName('c')) {
+        const f = c.getElementsByTagName('f')[0];
+        if (!f) continue;
+        const refs = (f.textContent || '').match(/[A-Z]+\d+/g);
+        if (!refs || !refs.length) continue;
+        if (!refs.every(r => splitRef(r)[1] === tr)) continue;
+        let s = 0;
+        for (const r of refs) {
+          const v = this.cellValue(this.getCell(sheet, tr, colToNum(splitRef(r)[0]), false));
+          if (typeof v === 'number') s += v;
+        }
+        let v = c.getElementsByTagName('v')[0];
+        if (!v) { v = sheet.doc.createElementNS(XLNS,'v'); c.appendChild(v); }
+        v.textContent = String(Math.round(s * 1e6) / 1e6);
+      }
+    }
+    this.parts.get(sheet.path).dirty = true;
+  }
+
+  _cache(sheet, rowNum, colNum, val){
+    const c = this.getCell(sheet, rowNum, colNum, false);
+    if (!c) return;
+    let v = c.getElementsByTagName('v')[0];
+    if (!v) { v = sheet.doc.createElementNS(XLNS,'v'); c.appendChild(v); }
+    v.textContent = String(Math.round(val * 1e6) / 1e6);
+  }
+
+  markFullRecalc(){
+    const p = this.parts.get('xl/workbook.xml');
+    if (!p) return;
+    let calc = p.doc.getElementsByTagName('calcPr')[0];
+    if (!calc) { calc = p.doc.createElementNS(XLNS,'calcPr'); p.doc.documentElement.appendChild(calc); }
+    calc.setAttribute('fullCalcOnLoad','1');
+    p.dirty = true;
+  }
+
+  async toBlob(){
+    const ser = new XMLSerializer(), enc = new TextEncoder(), out = [];
+    for (const e of this.entries) {
+      const part = this.parts.get(e.name);
+      if (part && part.dirty) {
+        let xml = ser.serializeToString(part.doc);
+        if (!/^\s*<\?xml/.test(xml)) xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + xml;
+        const raw = enc.encode(xml);
+        const comp = await deflateRaw(raw);
+        out.push({ name:e.name, method:8, crc:crc32(raw), compSize:comp.length, uncompSize:raw.length, comp });
+      } else {
+        out.push({ name:e.name, method:e.method, crc:e.crc, compSize:e.compSize, uncompSize:e.uncompSize, comp:e.comp });
+      }
+    }
+    return writeZip(out);
+  }
+}
+
+/* =============================== สถานะแอป =============================== */
+const S = {
+  wb:null, ref:null, fileBuf:null, fileSig:null, sheetIdx:0,
+  pending:[], existing:[], deletes:new Set(),
+  editsExisting:new Map(), editKey:null,
+  directory:new Map(), names:new Set(), customerFile:new Map(),
+  rate:{ baht:658, usd:19.8 }, editIdx:-1,
+  filterCategory: 'all', searchQuery: '',
+};
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+function toast(msg, kind='ok'){
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + kind;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { el.className = 'toast'; }, 3400);
+}
+
+/* ------------------------------------------------ Theme Engine */
+function initTheme(){
+  const saved = localStorage.getItem('ds_theme') || 'light';
+  setTheme(saved);
+  $('#themeBtn').onclick = () => {
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+  };
+}
+
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('ds_theme', theme);
+  $('#themeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+/* ------------------------------------------------------------ เปิดไฟล์ */
+const Store  = DS.store;
+const canFSA = Store.canFSA;
+
+/** เปิดไฟล์ .xlsx ที่อยู่ในเครื่องนี้ */
+async function openFile(){
+  const got = await Store.openLocal();
+  if (got === null) return;                       /* ผู้ใช้กดยกเลิก */
+  if (got === 'FALLBACK_INPUT') { $('#filePick').click(); return; }
+  S.ref = got.ref;
+  await loadBuffer(got.buf, got.name);
+}
+
+/** เปิดไฟล์ .xlsx จาก OneDrive */
+async function openFromOneDrive(){
+  try {
+    $('#status').textContent = '';
+    const got = await Store.openOneDrive();
+    if (!got) return;                             /* ผู้ใช้กดยกเลิก */
+    S.ref = got.ref;
+    await loadBuffer(got.buf, got.name);
+  } catch (err) {
+    if (err && err.needLogin) { toast(err.message, 'warn'); return; }
+    toast('เปิดไฟล์จาก OneDrive ไม่สำเร็จ: ' + (err.message || err), 'bad');
+    console.error(err);
+  } finally {
+    updateOdPill();
+  }
+}
+
+/** ป้ายบอกบัญชี OneDrive ที่ล็อกอินอยู่ + ที่เก็บรายชื่อลูกค้า */
+function updateOdPill(){
+  const pill = $('#odPill');
+  const a = DS.auth.isConfigured() && DS.auth.isSignedIn() ? DS.auth.account() : null;
+  if (a) {
+    pill.hidden = false;
+    pill.innerHTML = '☁ <b>' + (a.email || a.name || 'OneDrive') + '</b>';
+  } else {
+    pill.hidden = true;
+  }
+  $('#dirCount').parentElement.title = 'รายชื่อลูกค้า (customers.xlsx) เก็บไว้ที่: ' + Store.sideStoreLabel();
+}
+
+/* =============== โหมดแอป Android (.apk) — ใช้ตัวเลือกไฟล์ของระบบแทน =============== */
+const inApp = Store.inAndroidApp;
+
+function applyAppMode(){
+  if (!inApp) return;
+  /* ในแอปไม่มี OneDrive ผ่าน Graph — ตัวเลือกไฟล์ของ Android เห็น OneDrive อยู่แล้ว */
+  $('#openOdBtn').hidden  = true;
+  $('#openOdBtn2').hidden = true;
+  $('#openBtn2').className   = 'btn primary';
+  $('#openBtn2').textContent = '📂 เลือกไฟล์ .xlsx';
+  $('#dropHint').textContent = 'เลือกได้ทั้งจาก OneDrive, Google Drive และไฟล์ในเครื่อง';
+  $('#fsaNote').hidden    = true;
+  $('#installBtn').hidden = true;
+  $('#offlineBtn').hidden = true;
+  renderRecent();
+}
+
+/** ไฟล์ที่เคยเปิดและแอปยังมีสิทธิ์อยู่ — กดเปิดซ้ำได้เลยไม่ต้องไล่หาโฟลเดอร์ */
+function renderRecent(){
+  if (!inApp) return;
+  const list = DS.android.recent().filter(r => /\.xlsx$/i.test(r.name || '')).slice(0, 6);
+  const wrap = $('#recentWrap'), box = $('#recentList');
+  wrap.hidden = !list.length;
+  box.innerHTML = '';
+  for (const r of list) {
+    const row = document.createElement('div');
+    row.className = 'recent-row';
+
+    const open = document.createElement('button');
+    open.className = 'open';
+    open.innerHTML = '<span style="font-size:20px">📗</span><span class="nm"></span>';
+    open.querySelector('.nm').textContent = r.name;
+    open.onclick = () => openSafRecent(r);
+
+    const x = document.createElement('button');
+    x.className = 'x'; x.textContent = '✕'; x.title = 'เอาออกจากรายการ';
+    x.onclick = () => { DS.android.forget(r.uri); renderRecent(); };
+
+    row.append(open, x);
+    box.appendChild(row);
+  }
+}
+
+async function openSafRecent(r){
+  try {
+    const f = DS.android.read(r.uri);
+    S.ref = { kind:'saf', uri: r.uri, name: f.name || r.name, writable: r.writable !== false };
+    await loadBuffer(f.buf, f.name || r.name);
+  } catch (err) {
+    /* ไฟล์ถูกย้าย/ลบ หรือสิทธิ์หลุด — เอาออกจากรายการแล้วให้เลือกใหม่ */
+    DS.android.forget(r.uri);
+    renderRecent();
+    toast('เปิดไฟล์นี้ไม่ได้แล้ว (' + err.message + ') — กดเลือกไฟล์ใหม่อีกครั้ง', 'bad');
+  }
+}
+
+/* ------------------------------------------------- ติดตั้งแอป / ใช้ออฟไลน์ */
+async function updatePwaButtons(){
+  $('#installBtn').hidden = !DS.pwa.canInstall();
+  const warm = await DS.pwa.ocrCached();
+  $('#offlineBtn').hidden = !DS.pwa.supported || warm;
+}
+
+async function warmOffline(){
+  const btn = $('#offlineBtn');
+  btn.disabled = true;
+  try {
+    await DS.pwa.warmOffline((done, total) => {
+      btn.textContent = '📥 กำลังโหลด ' + done + '/' + total;
+    });
+    btn.hidden = true;
+    toast('เก็บตัวอ่านสลิปไว้ในเครื่องแล้ว — อ่านสลิปได้แม้ไม่มีเน็ต');
+  } catch (e) {
+    toast('เตรียมใช้ออฟไลน์ไม่สำเร็จ: ' + e.message, 'bad');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📥 เตรียมใช้ออฟไลน์';
+  }
+}
+
+async function loadBuffer(buf, name){
+  try {
+    $('#status').textContent = 'กำลังอ่านไฟล์…';
+    const wb = new Workbook();
+    await wb.load(buf, name);
+    S.wb = wb; S.fileBuf = buf; S.fileSig = sigOf(buf);
+    S.pending = []; S.deletes = new Set(); S.editsExisting = new Map();
+    await buildDirectory();
+    renderSheetTabs();
+    selectSheet(pickDefaultSheet());
+    $('#app').hidden = false;
+    $('#welcome').hidden = true;
+    $('#fileName').textContent = name;
+    const how = Store.describe(S.ref);
+    $('#saveMode').textContent = how.label;
+    $('#saveMode').className   = how.cls;
+    $('#status').textContent = '';
+    toast('เปิดไฟล์แล้ว: ' + name);
+    if (wb.repaired) {
+      banner('<b>⚠ พบและซ่อมช่องที่มีปัญหา ' + wb.repaired + ' ช่อง</b><br>'
+        + 'บางเซลล์อ้างอิงรูปแบบ (style) ที่ไม่มีอยู่จริงในไฟล์ — แก้ให้แล้วในหน่วยความจำ จะบันทึกกลับให้ถูกต้องในการบันทึกครั้งถัดไป', 'warn');
+    }
+  } catch (err) {
+    $('#status').textContent = '';
+    toast('เปิดไฟล์ไม่สำเร็จ: ' + err.message, 'bad');
+    console.error(err);
+  }
+}
+
+function pickDefaultSheet(){
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  const today = p(d.getDate()) + p(d.getMonth()+1) + d.getFullYear();
+  const i = S.wb.sheets.findIndex(s => s.name === today);
+  if (i >= 0) return i;
+  for (let k = S.wb.sheets.length - 1; k >= 0; k--)
+    if (S.wb.readRows(S.wb.sheets[k]).length) return k;
+  return 0;
+}
+
+async function getCustomerFile(){
+  try {
+    const buf = await Store.readCustomers();
+    if (!buf) return;
+    S.customerFile = await parseCustomersXlsx(buf);
+  } catch (e) {
+    console.warn('โหลด customers.xlsx ไม่สำเร็จ', e);
+  }
+}
+
+async function syncCustomerFile(){
+  if (!S.wb) return;
+  const updates = new Map();
+  for (const sh of S.wb.sheets) for (const r of S.wb.readRows(sh)) {
+    if (r.id === '' || !r.name) continue;
+    const id = String(r.id), nm = String(r.name);
+    if (S.customerFile.get(id) !== nm) updates.set(id, nm);
+  }
+  if (!updates.size) return;
+  for (const [id, nm] of updates) S.customerFile.set(id, nm);
+  try {
+    const blob = await buildCustomersXlsxBlob(S.customerFile);
+    const res  = await Store.writeCustomers(blob);
+    if (!res.ok) {
+      console.warn('บันทึกไฟล์รายชื่อ customers.xlsx ไม่สำเร็จ', res.error);
+      toast('อัปเดตรายชื่อลูกค้าไม่สำเร็จ — ชื่อใหม่จะยังไม่ถูกจำไว้', 'warn');
+    }
+  } catch (e) {
+    console.warn('บันทึกไฟล์รายชื่อ customers.xlsx ไม่สำเร็จ', e);
+  }
+}
+
+async function buildDirectory(){
+  await getCustomerFile();
+  S.directory = new Map(S.customerFile);
+  S.names = new Set(S.directory.values());
+  for (const sh of S.wb.sheets) for (const r of S.wb.readRows(sh)) {
+    if (r.name) S.names.add(String(r.name));
+    if (r.id !== '' && r.name && !S.directory.has(String(r.id))) S.directory.set(String(r.id), String(r.name));
+  }
+  const dlId = $('#dlIds'), dlName = $('#dlNames');
+  dlId.innerHTML = ''; dlName.innerHTML = '';
+  for (const [id, nm] of S.directory) {
+    const o = document.createElement('option'); o.value = id; o.label = nm; dlId.appendChild(o);
+  }
+  for (const nm of Array.from(S.names).sort()) {
+    const o = document.createElement('option'); o.value = nm; dlName.appendChild(o);
+  }
+  $('#dirCount').textContent = S.directory.size;
+}
+
+function prettySheetName(n){ const m=/^(\d{2})(\d{2})(\d{4})$/.exec(n); return m ? (+m[1])+'/'+(+m[2])+'/'+m[3] : n; }
+function sheetDateISO(n){ const m=/^(\d{2})(\d{2})(\d{4})$/.exec(n); return m ? m[3]+'-'+m[2]+'-'+m[1] : ''; }
+
+function renderSheetTabs(){
+  const wrap = $('#tabs'); wrap.innerHTML = '';
+  S.wb.sheets.forEach((sh, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.textContent = prettySheetName(sh.name);
+    b.onclick = () => {
+      const n = S.pending.length + S.deletes.size + S.editsExisting.size;
+      if (n && !confirm('ยังมีรายการค้างที่ยังไม่บันทึก ' + n + ' รายการ\nสลับชีตแล้วรายการค้างจะถูกล้าง ยืนยันหรือไม่?')) return;
+      S.pending = []; S.deletes = new Set(); S.editsExisting = new Map(); selectSheet(i);
+    };
+    wrap.appendChild(b);
+  });
+}
+
+function selectSheet(i){
+  S.sheetIdx = i;
+  $$('#tabs .tab').forEach((b,k) => b.classList.toggle('on', k === i));
+  const sh = S.wb.sheets[i];
+  S.existing = S.wb.readRows(sh);
+  const iso = sheetDateISO(sh.name);
+  if (iso) $('#f_date').value = iso;
+  renderTable(); updateCapacity();
+}
+
+function updateCapacity(){
+  const sh = S.wb.sheets[S.sheetIdx];
+  let cap = 0; for (const b of sh.blocks) cap += b.lastRow - b.firstRow + 1;
+  const used = S.existing.length + S.pending.length - S.deletes.size;
+  $('#capacity').textContent = used + ' / ' + cap + ' แถว';
+  $('#capacity').className = used >= cap ? 'pill bad' : (used > cap*0.9 ? 'pill warn' : 'pill');
+
+  const b0 = sh.blocks[0];
+  const cap0 = b0.lastRow - b0.firstRow + 1;
+  const inB0 = S.existing.filter(r => r._block === 0 && !S.deletes.has('0:'+r._row)).length;
+  const el = $('#blockPill');
+  if (used > cap0 || inB0 >= cap0) {
+    el.hidden = false;
+    el.className = 'pill warn';
+    el.textContent = '⚠ A–J เต็ม (' + cap0 + ' แถว) แถวใหม่ไปคอลัมน์ '
+      + numToCol(sh.blocks[1].cols.note) + '–' + numToCol(sh.blocks[1].cols.epay);
+    el.title = 'ตารางในชีตวางเรียงกัน 6 ชุด พอชุดแรกเต็ม แถวใหม่จะไปต่อชุดถัดไปทางขวา';
+  } else if (inB0 >= cap0 - 5) {
+    el.hidden = false; el.className = 'pill warn';
+    el.textContent = 'เหลือ ' + (cap0 - inB0) + ' แถวใน A–J';
+    el.title = '';
+  } else { el.hidden = true; }
+}
+
+/* ---------------------------------------------------------------- ฟอร์ม */
+function recalcEpay(){
+  if ($('#noEpay').checked) { $('#f_epay').value = ''; return; }
+  const b = parseFloat($('#f_baht').value);
+  if (!isFinite(b)) { $('#f_epay').value = ''; return; }
+  $('#f_epay').value = String(Math.round(b * (S.rate.usd / S.rate.baht) * 100) / 100);
+}
+
+function readForm(){
+  return {
+    date: $('#f_date').value || '',
+    note: $('#f_note').value.trim(),
+    status: $('#f_status').value,
+    app: $('#f_app').value,
+    id: $('#f_id').value.trim(),
+    name: $('#f_name').value.trim(),
+    time: $('#f_time').value.trim(),
+    thTime: $('#f_thtime').value.trim(),
+    baht: $('#f_baht').value.trim(),
+    epay: $('#noEpay').checked ? '' : $('#f_epay').value.trim(),
+  };
+}
+
+function fillForm(r){
+  $('#f_date').value = r.date || '';
+  $('#f_note').value = r.note || '';
+  $('#f_status').value = r.status || '✔️';
+  $('#f_app').value = r.app || 'W';
+  $('#f_id').value = r.id === '' ? '' : String(r.id);
+  $('#f_name').value = r.name || '';
+  $('#f_time').value = r.time || '';
+  const tm = /^(.+?)-(.+)$/.exec(r.time || '');
+  $('#t_from').value = tm ? tm[1] : ''; $('#t_to').value = tm ? tm[2] : '';
+  $('#f_thtime').value = r.thTime === '' ? '' : String(r.thTime);
+  $('#f_baht').value = r.baht === '' ? '' : String(r.baht);
+  $('#noEpay').checked = (r.epay === '' || r.epay == null);
+  $('#f_epay').value = r.epay === '' ? '' : String(r.epay);
+  syncChips();
+}
+
+function clearForm(){
+  ['#f_note','#f_id','#f_name','#f_time','#f_thtime','#f_baht','#f_epay','#t_from','#t_to']
+    .forEach(s => $(s).value = '');
+  $('#noEpay').checked = false;
+  $('#f_status').value = '✔️';
+  S.editIdx = -1;
+  S.editKey = null;
+  $('#addBtn').innerHTML = '➕ เพิ่มลงคิว <kbd>Ctrl+Enter</kbd>';
+  syncChips();
+  $('#f_id').focus();
+}
+
+function validate(r){
+  const e = [];
+  if (!r.name) e.push('ต้องกรอก "ชื่อ"');
+  if (r.id !== '' && !/^\d{1,12}$/.test(r.id)) e.push('ID ต้องเป็นตัวเลขล้วน');
+  if (r.time && !/^\d{1,2}\.\d{2}-\d{1,2}\.\d{2}$/.test(r.time) && !/[ก-ฮ]/.test(r.time))
+    e.push('เวลาถอนควรอยู่ในรูป HH.MM-HH.MM');
+  if (r.baht !== '' && !isFinite(Number(r.baht))) e.push('ยอดบาทต้องเป็นตัวเลข');
+  if (r.epay !== '' && !isFinite(Number(r.epay))) e.push('ยอด EPAY ต้องเป็นตัวเลข');
+  if (r.thTime !== '' && !isFinite(Number(r.thTime))) e.push('เวลายอดไทยต้องเป็นตัวเลข เช่น 7.12');
+  return e;
+}
+
+function normalize(r){
+  const o = { ...r };
+  o.time = o.time.replace(/\s*-\s*/,'-').replace(/:/g,'.');
+  return o;
+}
+
+function addToQueue(){
+  const raw = normalize(readForm());
+  const errs = validate(raw);
+  if (errs.length) { toast(errs[0], 'bad'); return; }
+
+  if (S.editKey) {
+    S.editsExisting.set(S.editKey, raw);
+    toast('แก้ไขรายการแล้ว (ยังไม่บันทึกลงไฟล์ — กด 💾 บันทึกลงไฟล์ เพื่อยืนยัน)');
+    if (raw.id && raw.name && !S.directory.has(raw.id)) {
+      S.directory.set(raw.id, raw.name);
+      const o = document.createElement('option'); o.value = raw.id; o.label = raw.name; $('#dlIds').appendChild(o);
+    }
+    clearForm(); renderTable(); updateCapacity();
+    return;
+  }
+
+  if (S.editIdx < 0 && raw.id && raw.time) {
+    const dup = [...S.existing, ...S.pending].some(x => String(x.id) === raw.id && String(x.time) === raw.time);
+    if (dup && !confirm('พบรายการ ID ' + raw.id + ' เวลา ' + raw.time + ' อยู่แล้ว\nต้องการเพิ่มซ้ำหรือไม่?')) return;
+  }
+
+  const sh = S.wb.sheets[S.sheetIdx];
+  let cap = 0; for (const b of sh.blocks) cap += b.lastRow - b.firstRow + 1;
+  if (S.editIdx < 0 && S.existing.length + S.pending.length >= cap) {
+    toast('ชีตนี้เต็มแล้ว (' + cap + ' แถว) — ให้เพิ่มแถวในไฟล์ Excel ก่อน', 'bad'); return;
+  }
+
+  if (S.editIdx >= 0) { S.pending[S.editIdx] = raw; toast('แก้ไขรายการในคิวแล้ว'); }
+  else { S.pending.push(raw); toast('เพิ่มลงคิวแล้ว (' + S.pending.length + ' รายการรอบันทึก)'); }
+
+  if (raw.id && raw.name && !S.directory.has(raw.id)) {
+    S.directory.set(raw.id, raw.name);
+    const o = document.createElement('option'); o.value = raw.id; o.label = raw.name; $('#dlIds').appendChild(o);
+  }
+  clearForm(); renderTable(); updateCapacity();
+}
+
+/* --------------------------------------------------------------- ตาราง */
+function refreshFooter(){
+  let sumB = 0, sumE = 0, live = 0;
+  for (const r of S.existing) {
+    const key = r._block + ':' + r._row;
+    if (S.deletes.has(key)) continue;
+    const eff = S.editsExisting.has(key) ? { ...r, ...S.editsExisting.get(key) } : r;
+    live++;
+    if (eff.baht !== '' && isFinite(Number(eff.baht))) sumB += Number(eff.baht);
+    if (eff.epay !== '' && isFinite(Number(eff.epay))) sumE += Number(eff.epay);
+  }
+  for (const r of S.pending) {
+    live++;
+    if (r.baht !== '' && isFinite(Number(r.baht))) sumB += Number(r.baht);
+    if (r.epay !== '' && isFinite(Number(r.epay))) sumE += Number(r.epay);
+  }
+  $('#sumBaht').textContent = sumB.toLocaleString('en-US');
+  $('#sumEpay').textContent = sumE.toLocaleString('en-US',{maximumFractionDigits:2});
+  $('#cntAll').textContent = live;
+  $('#cntPending').textContent = S.pending.length + S.editsExisting.size;
+  $('#cntDel').textContent = S.deletes.size;
+  $('#delPill').hidden = S.deletes.size === 0;
+
+  const pendingOrDel = (S.pending.length + S.deletes.size + S.editsExisting.size);
+  $('#saveBtn').disabled = pendingOrDel === 0;
+  
+  const floatBar = $('#floatingBar');
+  if (pendingOrDel > 0) {
+    floatBar.classList.add('show');
+    $('#floatCount').textContent = pendingOrDel;
+  } else {
+    floatBar.classList.remove('show');
+  }
+}
+
+function editCell(rowIdx, field, placeholder, required){
+  const inp = document.createElement('input');
+  inp.className = 'cell';
+  inp.value = S.pending[rowIdx][field] ?? '';
+  inp.placeholder = placeholder || '';
+  const mark = () => inp.classList.toggle('need', !!required && !String(inp.value).trim());
+  mark();
+  inp.addEventListener('input', () => {
+    S.pending[rowIdx][field] = inp.value;
+    mark();
+    if (field === 'id') {
+      const nm = S.directory.get(inp.value.trim());
+      if (nm) {
+        const nameInput = inp.closest('tr').querySelector('input.cell[data-f="name"]');
+        if (nameInput && !nameInput.value) {
+          nameInput.value = nm; S.pending[rowIdx].name = nm;
+          nameInput.classList.remove('need');
+        }
+      }
+    }
+  });
+  inp.dataset.f = field;
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const all = Array.from(document.querySelectorAll('#tbody input.cell[data-f="' + field + '"]'));
+      const k = all.indexOf(inp);
+      if (k >= 0 && all[k+1]) all[k+1].focus(); else inp.blur();
+    }
+  });
+  return inp;
+}
+
+function renderTable(){
+  const tb = $('#tbody'); tb.innerHTML = '';
+  const rows = [
+    ...S.existing.map(r => {
+      const key = r._block + ':' + r._row;
+      const edit = S.editsExisting.get(key);
+      const merged = edit ? { ...r, ...edit, _row:r._row, _block:r._block } : r;
+      return { r: merged, pending:false, edited: !!edit };
+    }),
+    ...S.pending.map((r,i) => ({ r, pending:true, i })),
+  ];
+
+  const q = S.searchQuery.toLowerCase().trim();
+  const cat = S.filterCategory;
+
+  rows.forEach((row, idx) => {
+    const r = row.r;
+    const isDel = !row.pending && S.deletes.has(r._block + ':' + r._row);
+
+    if (cat === 'pending' && !row.pending) return;
+    if (cat === 'success' && r.status !== '✔️') return;
+    if (cat === 'failed' && r.status !== '❌') return;
+    if (cat === 'del' && !isDel) return;
+
+    if (q) {
+      const textToSearch = [r.id, r.name, r.note, r.time, r.app, r.baht].join(' ').toLowerCase();
+      if (!textToSearch.includes(q)) return;
+    }
+
+    const tr = document.createElement('tr');
+    if (row.pending) tr.className = 'pending' + (r._ocr ? ' ocr' : '');
+    else if (row.edited) tr.className = 'pending';
+    
+    let where = '';
+    if (!row.pending) {
+      const b = S.wb.sheets[S.sheetIdx].blocks[r._block];
+      where = numToCol(b.cols.note) + r._row;
+      if (r._block > 0) where += ' ⟶';
+    }
+    const text = [
+      String(idx+1) + (where ? ' · ' + where : ''),
+      r.date ? fmtDateTH(r.date) : '',
+      r.note ?? '', r.status ?? '', r.app ?? '',
+      r.id === '' ? '' : String(r.id),
+      r.name ?? '', r.time ?? '',
+      r.thTime === '' ? '' : String(r.thTime),
+      r.baht === '' ? '' : Number(r.baht).toLocaleString('en-US'),
+      r.epay === '' ? '' : Number(r.epay).toLocaleString('en-US',{maximumFractionDigits:2}),
+    ];
+
+    const editable = { 2:['note','หมายเหตุ',false], 5:['id','ID',false], 6:['name','ชื่อ *',true] };
+    text.forEach((v,ci) => {
+      const td = document.createElement('td');
+      if (ci >= 9) td.className = 'num';
+      if (row.pending && editable[ci]) {
+        const [f, ph, req] = editable[ci];
+        td.appendChild(editCell(row.i, f, ph, req));
+      } else {
+        td.textContent = v;
+      }
+      tr.appendChild(td);
+    });
+    const td = document.createElement('td'); td.className = 'act';
+    if (row.pending) {
+      const eb = document.createElement('button'); eb.textContent='✎'; eb.title='ดึงไปแก้ในฟอร์มซ้าย';
+      eb.onclick = () => { fillForm(S.pending[row.i]); S.editIdx = row.i;
+        $('#addBtn').textContent = '💾 บันทึกการแก้ไข'; $('#f_id').focus(); };
+      const db = document.createElement('button'); db.textContent='🗑'; db.title='ลบออกจากคิว';
+      db.onclick = () => { S.pending.splice(row.i,1); renderTable(); updateCapacity(); };
+      td.append(eb, db);
+    } else {
+      const key = r._block + ':' + r._row;
+      const marked = S.deletes.has(key);
+      if (marked) tr.classList.add('del');
+      const eb = document.createElement('button');
+      eb.textContent = '✎';
+      eb.title = 'แก้ไขรายการนี้ (ดึงไปแก้ในฟอร์มซ้าย)';
+      eb.disabled = marked;
+      eb.onclick = () => {
+        fillForm(r); S.editKey = key; S.editIdx = -1;
+        $('#addBtn').innerHTML = '💾 บันทึกการแก้ไข <kbd>Ctrl+Enter</kbd>';
+        $('#f_id').focus();
+      };
+      const db = document.createElement('button');
+      db.textContent = marked ? '↺' : '🗑';
+      db.title = marked ? 'ยกเลิกการลบ' : 'ทำเครื่องหมายลบ (มีผลเมื่อกดบันทึก)';
+      db.onclick = () => {
+        if (S.deletes.has(key)) S.deletes.delete(key); else S.deletes.add(key);
+        if (S.editKey === key) clearForm();
+        renderTable(); updateCapacity();
+      };
+      td.append(eb, db);
+    }
+    tr.appendChild(td);
+    tb.appendChild(tr);
+  });
+  refreshFooter();
+}
+
+/* -------------------------------------------------------------- บันทึก */
+function banner(html, kind){
+  const el = $('#saveResult');
+  el.className = 'note ' + (kind || '');
+  el.innerHTML = '<button class="close" title="ปิด">✕</button>' + html;
+  el.querySelector('.close').onclick = () => { el.hidden = true; };
+  el.hidden = false;
+}
+
+function sigOf(buf){
+  const u = new Uint8Array(buf);
+  return u.length + ':' + crc32(u).toString(16);
+}
+
+function uploadProgress(sent, total){
+  $('#status').textContent = 'กำลังอัปโหลด ' + Math.round(sent / total * 100) + '%';
+}
+
+/** โหลดไฟล์ล่าสุดจากต้นทาง (เครื่อง/OneDrive) โดยคงรายการที่ยังไม่บันทึกไว้ */
+async function reloadFromSource(){
+  const sheetName = S.wb.sheets[S.sheetIdx].name;
+  const keepPending = S.pending.slice();
+  const keepDeletes = new Set(S.deletes);
+  const keepEdits   = new Map(S.editsExisting);
+  const got = await Store.reread(S.ref);
+  S.ref = got.ref;
+  await loadBuffer(got.buf, S.wb.fileName);
+  const i = S.wb.sheets.findIndex(s => s.name === sheetName);
+  S.pending = keepPending;
+  S.deletes = keepDeletes;
+  S.editsExisting = keepEdits;
+  selectSheet(i >= 0 ? i : 0);
+  return i >= 0;
+}
+
+async function saveAll(){
+  if (!S.pending.length && !S.deletes.size && !S.editsExisting.size) return;
+
+  const noName = S.pending.filter(r => !String(r.name || '').trim()).length
+    + [...S.editsExisting.values()].filter(r => !String(r.name || '').trim()).length;
+  if (noName) {
+    toast('ยังมี ' + noName + ' รายการที่ไม่ได้ใส่ "ชื่อ" — เติมในตารางก่อน', 'bad');
+    const first = document.querySelector('#tbody input.cell.need');
+    if (first) first.focus();
+    return;
+  }
+
+  let writeInPlace = Store.describe(S.ref).inPlace;
+  if (writeInPlace) {
+    try { writeInPlace = await Store.ensureWritable(S.ref); }
+    catch (e) { writeInPlace = false; }
+    if (!writeInPlace) {
+      toast('ไม่ได้รับสิทธิ์เขียนไฟล์ — จะบันทึกเป็นไฟล์ดาวน์โหลดแทน', 'warn');
+    }
+  }
+
+  /* ไฟล์ในเครื่อง: เทียบลายเซ็นไฟล์เอง — OneDrive ใช้ eTag ตอนอัปโหลดแทน (แม่นกว่า) */
+  if (writeInPlace && S.ref.kind === 'fsa' && S.fileSig) {
+    try {
+      const cur = await Store.reread(S.ref);
+      if (sigOf(cur.buf) !== S.fileSig) {
+        const go = confirm('⚠ ไฟล์นี้ถูกแก้จากที่อื่นหลังจากโปรแกรมเปิดมันไป\n\nกด OK เพื่อโหลดไฟล์ล่าสุดก่อนแล้วค่อยเพิ่มรายการต่อท้าย\nกด Cancel เพื่อยกเลิก');
+        if (!go) { $('#status').textContent=''; $('#saveBtn').disabled = false; return; }
+        await reloadFromSource();
+        toast('โหลดไฟล์ล่าสุดแล้ว — กำลังเพิ่มรายการต่อท้าย');
+      }
+    } catch (e) { console.warn('stale check failed', e); }
+  }
+
+  const sh = S.wb.sheets[S.sheetIdx];
+  const target = !writeInPlace         ? 'ดาวน์โหลดไฟล์ใหม่ชื่อ ' + S.wb.fileName
+               : S.ref.kind === 'onedrive' ? 'เขียนทับไฟล์บน OneDrive: ' + S.wb.fileName
+                                       : 'เขียนทับไฟล์ ' + S.wb.fileName;
+  const what = [];
+  if (S.pending.length) what.push('เพิ่ม ' + S.pending.length + ' รายการ');
+  if (S.editsExisting.size) what.push('แก้ไข ' + S.editsExisting.size + ' รายการ');
+  if (S.deletes.size)   what.push('ลบ ' + S.deletes.size + ' รายการ');
+  if (!confirm(what.join(' และ ') + ' ในชีต ' + prettySheetName(sh.name)
+      + '\nปลายทาง: ' + target + '\n\nยืนยันหรือไม่?')) return;
+
+  $('#saveBtn').disabled = true;
+  $('#status').textContent = 'กำลังบันทึก…';
+  try {
+    if ($('#backup').checked && S.fileBuf) downloadBackup();
+
+    const before = S.existing.length;
+    const removed = S.deletes.size;
+
+    /* ลงมือแก้ workbook แล้วประกอบเป็นไฟล์ — แยกออกมาเพื่อให้ทำซ้ำได้ถ้าชนกัน */
+    let edited = 0, n = 0, placed = [];
+    async function applyAndBuild(){
+      const sheet = S.wb.sheets[S.sheetIdx];
+      edited = 0; n = 0; placed = [];
+      for (const [key, rec] of S.editsExisting) {
+        if (S.deletes.has(key)) continue; // ถูกลบไปแล้ว ไม่ต้องเขียนทับ
+        const [bi, rn] = key.split(':').map(Number);
+        S.wb.writeRecord(sheet, { block: bi, row: rn }, rec);
+        edited++;
+      }
+      if (removed) S.wb.deleteRows(sheet, S.deletes);
+      const used = new Set();
+      for (const rec of S.pending) {
+        const slot = S.wb.nextFreeSlot(sheet, used);
+        if (!slot) throw new Error('แถวในชีตเต็ม เขียนได้ ' + n + ' รายการ');
+        S.wb.writeRecord(sheet, slot, rec); placed.push(slot); n++;
+      }
+      S.wb.refreshTotals(sheet);
+      S.wb.markFullRecalc();
+      return S.wb.toBlob();
+    }
+
+    let blob = await applyAndBuild();
+    let verified = null;
+
+    if (writeInPlace) {
+      try {
+        S.ref = await Store.write(S.ref, blob, uploadProgress);
+      } catch (err) {
+        if (err.unverified) {
+          /* เขียนคำสั่งไปแล้วแต่อ่านกลับมาได้ของไม่ตรง — ที่เก็บนั้นรับคำสั่งแล้วไม่ทำจริง
+             (เจอได้กับผู้ให้บริการคลาวด์บางเจ้าบน Android) ไฟล์เดิมตอนนี้เชื่อไม่ได้แล้ว */
+          const go = confirm('⚠ บันทึกไม่สำเร็จ — ที่เก็บไฟล์นี้ไม่ยอมให้เขียนทับจริง\n\n'
+            + err.message + '\n\n'
+            + '⚠ ไฟล์เดิมอาจเสียหาย ให้เปิดตรวจดูด้วย\n\n'
+            + 'กด OK เพื่อเลือกที่เก็บใหม่ แล้วบันทึกงานทั้งหมดเป็นไฟล์ใหม่ (ข้อมูลไม่หาย)\n'
+            + 'กด Cancel เพื่อหยุดไว้ก่อน');
+          if (!go) throw new Error('ยังไม่ได้บันทึก — รายการทั้งหมดยังอยู่ในหน้าจอ');
+          const newRef = await Store.saveAsAndroid(blob, S.wb.fileName);
+          if (!newRef) throw new Error('ยังไม่ได้บันทึก — รายการทั้งหมดยังอยู่ในหน้าจอ');
+          S.ref = newRef;
+          S.wb.fileName = newRef.name;
+          $('#fileName').textContent = newRef.name;
+          const how2 = Store.describe(S.ref);
+          $('#saveMode').textContent = how2.label;
+          $('#saveMode').className   = how2.cls;
+          toast('บันทึกเป็นไฟล์ใหม่แล้ว — ครั้งต่อไปจะบันทึกลงไฟล์นี้แทน', 'warn');
+        } else if (err.conflict) {
+          /* OneDrive ตอบ 412 = มีคนแก้ไฟล์นี้ระหว่างที่เรากรอกอยู่ */
+          const go = confirm('⚠ ไฟล์บน OneDrive ถูกแก้จากเครื่องอื่นหลังจากเปิดมา\n\n'
+            + 'กด OK เพื่อโหลดไฟล์ล่าสุดมาก่อน แล้วเพิ่มรายการต่อท้ายให้\n'
+            + 'กด Cancel เพื่อยกเลิก (ไม่มีอะไรถูกเขียนลงไฟล์)');
+          if (!go) throw new Error('ยกเลิกการบันทึก — ไฟล์บน OneDrive ไม่ถูกแตะต้อง');
+          $('#status').textContent = 'กำลังโหลดไฟล์ล่าสุด…';
+          await reloadFromSource();
+          blob = await applyAndBuild();
+          $('#status').textContent = 'กำลังบันทึก…';
+          S.ref = await Store.write(S.ref, blob, uploadProgress);
+        } else {
+          throw err;
+        }
+      }
+      try {
+        const check = await Store.reread(S.ref);
+        S.ref = check.ref;
+        const vwb = new Workbook();
+        await vwb.load(check.buf, 'verify');
+        verified = vwb.readRows(vwb.sheets[S.sheetIdx]).length;
+      } catch (e) {
+        console.warn('อ่านไฟล์กลับมาตรวจไม่สำเร็จ', e);
+      }
+    } else {
+      Store.download(blob, S.wb.fileName);
+    }
+
+    S.fileBuf = await blob.arrayBuffer();
+    S.fileSig = sigOf(S.fileBuf);
+    S.pending = [];
+    S.deletes = new Set();
+    S.editsExisting = new Map();
+    S.existing = S.wb.readRows(sh);
+    await buildDirectory(); renderTable(); updateCapacity();
+    syncCustomerFile();
+
+    const didWhat = [n ? ('เพิ่ม ' + n) : '', edited ? ('แก้ไข ' + edited) : '', removed ? ('ลบ ' + removed) : '']
+      .filter(Boolean).join(' · ') + ' รายการ';
+
+    let placedMsg = '', spill = false;
+    if (placed.length) {
+      const byBlk = new Map();
+      for (const p of placed) {
+        if (!byBlk.has(p.block)) byBlk.set(p.block, []);
+        byBlk.get(p.block).push(p.row);
+      }
+      const parts = [];
+      for (const [bi, rws] of byBlk) {
+        const b = sh.blocks[bi];
+        const c1 = numToCol(b.cols.note), c2 = numToCol(b.cols.epay);
+        if (bi > 0) spill = true;
+        parts.push('คอลัมน์ <b>' + c1 + '–' + c2 + '</b>'
+          + (bi > 0 ? ' (ชุดที่ ' + (bi+1) + ')' : '')
+          + ' แถว ' + Math.min(...rws) + (rws.length > 1 ? '–' + Math.max(...rws) : ''));
+      }
+      placedMsg = '<br>แถวใหม่อยู่ที่ ' + parts.join(' และ ');
+    }
+
+    if (writeInPlace) {
+      const onOd    = S.ref && S.ref.kind === 'onedrive';
+      const expect  = before + n - removed;
+      const where   = onOd ? 'OneDrive' : 'ดิสก์';
+      const checked = verified === null
+        ? '<span style="color:var(--warn)">อ่านไฟล์กลับมาตรวจไม่ได้ (บันทึกไปแล้ว)</span>'
+        : 'ตรวจสอบจากไฟล์บน' + where + ': มี <b>' + verified + '</b> รายการ';
+      banner('<b>บันทึกลง' + (onOd ? ' OneDrive ' : 'ไฟล์') + 'แล้ว — ' + didWhat + '</b><br>'
+        + 'ไฟล์: <code>' + S.wb.fileName + '</code> · ชีต ' + prettySheetName(sh.name) + '<br>'
+        + checked + placedMsg,
+        verified === null ? 'warn' : (verified === expect ? (spill ? 'warn' : 'good') : 'bad'));
+      toast('บันทึกสำเร็จ — ' + didWhat);
+    } else {
+      banner('<b>ดาวน์โหลดไฟล์ใหม่แล้ว — ' + didWhat + '</b>', 'warn');
+      toast('ดาวน์โหลดไฟล์แล้ว — ต้องนำไปวางทับเอง', 'warn');
+    }
+  } catch (err) {
+    banner('<b>บันทึกไม่สำเร็จ</b><br>' + err.message, 'bad');
+    toast('บันทึกไม่สำเร็จ: ' + err.message, 'bad');
+    console.error(err);
+  } finally {
+    $('#status').textContent = '';
+    $('#saveBtn').disabled = (S.pending.length + S.deletes.size + S.editsExisting.size) === 0;
+  }
+}
+
+function downloadBackup(){
+  if (!S.fileBuf) return;
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  const stamp = d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([S.fileBuf]));
+  a.download = S.wb.fileName.replace(/\.xlsx$/i,'') + '.backup-' + stamp + '.xlsx';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 8000);
+}
+
+/* ==================== OCR สลิป (Tesseract.js) ==================== */
+S.ocr = { ready:false, loading:false, error:'', hasThai:true, langs:['tha','eng'] };
+const TESS_BASE = new URL('vendor/tesseract/', document.baseURI).href;
+let tessWorkerPromise = null;
+
+function updateOcrPill(){
+  const pill = $('#ocrPill');
+  pill.hidden = false;
+  if (S.ocr.ready) {
+    pill.textContent = '🖼️ ลากรูปสลิปเข้ามาได้ (ไทย+อังกฤษ)';
+    pill.className = 'pill good';
+    pill.title = 'OCR: Tesseract.js — อ่านในเครื่อง ไม่ต่อเน็ต';
+  } else if (S.ocr.loading) {
+    pill.textContent = '⏳ กำลังโหลดตัวอ่าน OCR…';
+    pill.className = 'pill warn';
+  } else {
+    pill.textContent = '🖼️ อ่านรูปไม่ได้';
+    pill.className = 'pill warn';
+  }
+}
+
+function getTessWorker(){
+  if (tessWorkerPromise) return tessWorkerPromise;
+  S.ocr.loading = true; updateOcrPill();
+  tessWorkerPromise = Tesseract.createWorker('tha+eng', 1, {
+    workerPath: TESS_BASE + 'worker.min.js',
+    corePath:   TESS_BASE,
+    langPath:   TESS_BASE + 'lang',
+    logger: m => {
+      if (m.status === 'recognizing text' && typeof m.progress === 'number') {
+        const el = $('#ocrBusyText');
+        if (el && el.dataset.base) el.textContent = el.dataset.base + ' — กำลังจดจำอักษร ' + Math.round(m.progress * 100) + '%';
+      }
+    },
+  }).then(w => {
+    S.ocr.ready = true; S.ocr.loading = false; S.ocr.error = '';
+    updateOcrPill();
+    return w;
+  }).catch(e => {
+    S.ocr.ready = false; S.ocr.loading = false;
+    S.ocr.error = 'โหลดตัวอ่าน OCR ไม่สำเร็จ: ' + (e && e.message ? e.message : e);
+    tessWorkerPromise = null;
+    updateOcrPill();
+    throw e;
+  });
+  return tessWorkerPromise;
+}
+function checkOcr(){ updateOcrPill(); getTessWorker().catch(() => {}); }
+
+function fileToImage(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload  = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+    img.src = url;
+  });
+}
+function imageToCanvas(img){
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth || img.width;
+  c.height = img.naturalHeight || img.height;
+  c.getContext('2d', { willReadFrequently:true }).drawImage(img, 0, 0);
+  return c;
+}
+function scaleCanvas(canvas, factor){
+  if (Math.abs(factor - 1) < 0.01) return canvas;
+  const out = document.createElement('canvas');
+  out.width  = Math.max(1, Math.round(canvas.width  * factor));
+  out.height = Math.max(1, Math.round(canvas.height * factor));
+  const ctx = out.getContext('2d');
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(canvas, 0, 0, out.width, out.height);
+  return out;
+}
+
+function autoTrim(canvas){
+  const ctx = canvas.getContext('2d', { willReadFrequently:true });
+  const w = canvas.width, h = canvas.height;
+  if (w < 20 || h < 20) return canvas;
+  const { data } = ctx.getImageData(0, 0, w, h);
+  const gray = new Float32Array(w * h);
+  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+    gray[p] = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+  }
+  const rowVar = y => { let s=0,s2=0; const o=y*w; for (let x=0;x<w;x++){ const v=gray[o+x]; s+=v; s2+=v*v; } const m=s/w; return s2/w - m*m; };
+  const colVar = x => { let s=0,s2=0; for (let y=0;y<h;y++){ const v=gray[y*w+x]; s+=v; s2+=v*v; } const m=s/h; return s2/h - m*m; };
+  const VAR_TH = 55, MAX_TRIM = 0.35;
+  const maxY = Math.floor(h * MAX_TRIM), maxX = Math.floor(w * MAX_TRIM);
+  let top = 0, bottom = h - 1, left = 0, right = w - 1;
+  while (top < maxY && rowVar(top) < VAR_TH) top++;
+  while (bottom > h - 1 - maxY && rowVar(bottom) < VAR_TH) bottom--;
+  while (left < maxX && colVar(left) < VAR_TH) left++;
+  while (right > w - 1 - maxX && colVar(right) < VAR_TH) right--;
+  if (right - left < w * 0.3 || bottom - top < h * 0.3) return canvas;
+  if (left === 0 && top === 0 && right === w - 1 && bottom === h - 1) return canvas;
+  const cw = right - left + 1, ch = bottom - top + 1;
+  const out = document.createElement('canvas');
+  out.width = cw; out.height = ch;
+  out.getContext('2d').drawImage(canvas, left, top, cw, ch, 0, 0, cw, ch);
+  return out;
+}
+
+function estimateSkewAngle(canvas){
+  const small = scaleCanvas(canvas, Math.min(1, 480 / canvas.width));
+  const ctx = small.getContext('2d', { willReadFrequently:true });
+  const w = small.width, h = small.height;
+  const { data } = ctx.getImageData(0, 0, w, h);
+  const gray = new Float32Array(w * h);
+  let mean = 0;
+  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+    const g = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+    gray[p] = g; mean += g;
+  }
+  mean /= gray.length;
+  const cx = w / 2, cy = h / 2;
+  function score(deg){
+    const rad = deg * Math.PI / 180, sin = Math.sin(rad), cos = Math.cos(rad);
+    const bins = new Float64Array(h);
+    for (let y = 0; y < h; y++) {
+      const row = y * w;
+      for (let x = 0; x < w; x++) {
+        if (gray[row + x] >= mean) continue;
+        const ry = Math.round((x - cx) * sin + (y - cy) * cos + cy);
+        if (ry >= 0 && ry < h) bins[ry]++;
+      }
+    }
+    let m = 0, m2 = 0;
+    for (let i = 0; i < h; i++) { m += bins[i]; m2 += bins[i]*bins[i]; }
+    m /= h; return m2 / h - m*m;
+  }
+  let best = 0, bestScore = -1;
+  for (let a = -8; a <= 8; a += 0.5) {
+    const s = score(a);
+    if (s > bestScore) { bestScore = s; best = a; }
+  }
+  return best;
+}
+function rotateCanvas(canvas, angleDeg){
+  if (Math.abs(angleDeg) < 0.3) return canvas;
+  const rad = angleDeg * Math.PI / 180;
+  const w = canvas.width, h = canvas.height;
+  const nw = Math.ceil(Math.abs(w * Math.cos(rad)) + Math.abs(h * Math.sin(rad)));
+  const nh = Math.ceil(Math.abs(w * Math.sin(rad)) + Math.abs(h * Math.cos(rad)));
+  const out = document.createElement('canvas');
+  out.width = nw; out.height = nh;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, nw, nh);
+  ctx.translate(nw / 2, nh / 2); ctx.rotate(rad);
+  ctx.drawImage(canvas, -w / 2, -h / 2);
+  return out;
+}
+
+function enhanceForOcr(canvas){
+  let work = canvas;
+  const MAXW = 1800, MINW = 900;
+  if (work.width > MAXW) work = scaleCanvas(work, MAXW / work.width);
+  else if (work.width < MINW) work = scaleCanvas(work, MINW / work.width);
+
+  const ctx = work.getContext('2d', { willReadFrequently:true });
+  const w = work.width, h = work.height;
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const d = imgData.data;
+  const gray = new Float32Array(w * h);
+  const hist = new Uint32Array(256);
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    const g = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+    gray[p] = g; hist[g|0]++;
+  }
+  const total = w * h, cut = total * 0.01;
+  let lo = 0, hi = 255, acc = 0;
+  for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc >= cut) { lo = i; break; } }
+  acc = 0;
+  for (let i = 255; i >= 0; i--) { acc += hist[i]; if (acc >= cut) { hi = i; break; } }
+  if (hi <= lo) { lo = 0; hi = 255; }
+  const scale = 255 / (hi - lo);
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = y * w + x;
+      let blur = gray[idx];
+      if (x > 0 && x < w-1 && y > 0 && y < h-1) {
+        blur = (gray[idx-1] + gray[idx+1] + gray[idx-w] + gray[idx+w] + gray[idx]*4) / 8;
+      }
+      let v = gray[idx] + 0.6 * (gray[idx] - blur);
+      v = (v - lo) * scale;
+      v = v < 0 ? 0 : v > 255 ? 255 : v;
+      const o = idx * 4;
+      d[o] = d[o+1] = d[o+2] = v;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+  return work;
+}
+
+async function preprocessSlipImage(file){
+  const img = await fileToImage(file);
+  let c = imageToCanvas(img);
+  c = autoTrim(c);
+  const angle = estimateSkewAngle(c);
+  c = rotateCanvas(c, angle);
+  if (Math.abs(angle) >= 0.3) c = autoTrim(c);
+  c = enhanceForOcr(c);
+  return c;
+}
+
+function num(s){ return parseFloat(String(s).replace(/,/g, '')); }
+function pad2(n){ return String(n).padStart(2, '0'); }
+function pad4(n){ return String(n).padStart(4, '0'); }
+function hhmmss(h, m, s){ let t = pad2(h) + ':' + pad2(m); if (s) t += ':' + pad2(s); return t; }
+
+function isoDate(y, mo, d){
+  if (y < 100) y += 2000;
+  if (y > new Date().getFullYear() + 400) y -= 543;
+  return pad4(y) + '-' + pad2(mo) + '-' + pad2(d);
+}
+
+function flattenLines(data){
+  const out = [];
+  for (const b of data.blocks || []) {
+    for (const p of b.paragraphs || []) {
+      for (const l of p.lines || []) {
+        out.push({ text: l.text || '', y: (l.bbox && l.bbox.y0) || 0, words: l.words || [] });
+      }
+    }
+  }
+  return out;
+}
+
+function extractSlipFields(data){
+  const lines = flattenLines(data);
+  const flat = (data.text || '').replace(/\s+/g, ' ').trim();
+
+  const stamps = [];
+  for (const line of lines) {
+    let m = line.text.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\s*[-T]?\s*(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?/);
+    if (m) { stamps.push({ date: isoDate(+m[1], +m[2], +m[3]), y: line.y, time: hhmmss(m[4], m[5], m[6]) }); continue; }
+    m = line.text.match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\s*[-T]?\s*(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?/);
+    if (m) { stamps.push({ date: isoDate(+m[3], +m[2], +m[1]), y: line.y, time: hhmmss(m[4], m[5], m[6]) }); continue; }
+
+    for (let i = 0; i < line.words.length; i++) {
+      const wd = line.words[i];
+      let iso = null, mm2;
+      if ((mm2 = wd.text.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/))) iso = isoDate(+mm2[1], +mm2[2], +mm2[3]);
+      else if ((mm2 = wd.text.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$/))) iso = isoDate(+mm2[3], +mm2[2], +mm2[1]);
+      if (!iso) continue;
+      let tm = null;
+      const next = line.words[i + 1];
+      if (next) {
+        const tmm = next.text.match(/^(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?$/);
+        if (tmm && +tmm[1] <= 23 && +tmm[2] <= 59) tm = hhmmss(tmm[1], tmm[2], tmm[3]);
+      }
+      if (!tm) {
+        for (const w2 of line.words) {
+          const tmm = w2.text.match(/(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?/);
+          if (tmm && +tmm[1] <= 23 && +tmm[2] <= 59) { tm = hhmmss(tmm[1], tmm[2], tmm[3]); break; }
+        }
+      }
+      stamps.push({ date: iso, y: (wd.bbox && wd.bbox.y0) || line.y, time: tm });
+    }
+  }
+  stamps.sort((a, b) => a.y - b.y);
+
+  const looseRaw = [];
+  for (const line of lines) {
+    const re = /\b(\d{1,2})[:.;,](\d{2})(?:[:.;,](\d{2}))?\b/g;
+    let m;
+    while ((m = re.exec(line.text))) {
+      if (+m[1] <= 23 && +m[2] <= 59) looseRaw.push({ time: hhmmss(m[1], m[2], m[3]), y: line.y });
+    }
+  }
+  looseRaw.sort((a, b) => a.y - b.y);
+  const looseTimes = looseRaw.map(x => x.time);
+
+  let usd = null, m;
+  if      ((m = flat.match(/USD\s*([\d,]+(?:\.\d+)?)/i)))  usd = num(m[1]);
+  else if ((m = flat.match(/([\d,]+(?:\.\d+)?)\s*USD/i)))  usd = num(m[1]);
+  else if ((m = flat.match(/\$\s*([\d,]+(?:\.\d+)?)/)))    usd = num(m[1]);
+
+  let baht = null, bahtSymbol = false;
+  if      ((m = flat.match(/(?:THB|BAHT)\s*([\d,]+(?:\.\d+)?)/i))) baht = num(m[1]);
+  else if ((m = flat.match(/([\d,]+(?:\.\d+)?)\s*(?:THB|BAHT)/i))) baht = num(m[1]);
+  else if ((m = flat.match(/฿\s*([\d,]+(?:\.\d+)?)/)))              { baht = num(m[1]); bahtSymbol = true; }
+  else if ((m = flat.match(/([\d,]+(?:\.\d+)?)\s*บาท/)))            baht = num(m[1]);
+
+  if (!bahtSymbol && (m = flat.match(/฿\s*([\d,]+(?:\.\d+)?)/))) { baht = num(m[1]); bahtSymbol = true; }
+
+  const amounts = [];
+  {
+    const re = /(?<![\d:.-])(\d{1,3}(?:,\d{3})+(?:\.\d{1,2})?|\d+\.\d{2})(?![\d:.-])/g;
+    let mm;
+    while ((mm = re.exec(flat))) {
+      const v = num(mm[1]);
+      if (v >= 1 && v < 10000000) amounts.push(v);
+    }
+  }
+  const uniqAmounts = [...new Set(amounts)].sort((a, b) => a - b);
+
+  const isWithdrawal =
+    /initiation|arrival|withdraw|history|wallet/i.test(flat) ||
+    /ถอนเงิน|ประวัติ|กระเป๋าเงิน/.test(flat) ||
+    usd != null || stamps.length >= 1;
+
+  if (usd == null && baht == null && isWithdrawal) {
+    let guess = null;
+    for (const l of lines) {
+      if (!/ถอนเงิน|wallet|withdraw/i.test(l.text)) continue;
+      const mm2 = l.text.match(/(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)\s*$/);
+      if (mm2) { guess = num(mm2[1]); break; }
+    }
+    if (guess != null) {
+      const nearMultiple = (v, unit) => {
+        if (!(unit > 0)) return false;
+        const k = Math.round(v / unit);
+        return k >= 1 && Math.abs(v - k * unit) <= unit * 0.03;
+      };
+      const unitBaht = S.rate && S.rate.baht;
+      const unitUsd  = S.rate && S.rate.usd;
+      const looksBaht = nearMultiple(guess, unitBaht);
+      const looksUsd  = nearMultiple(guess, unitUsd);
+      if (looksBaht && !looksUsd) { baht = guess; bahtSymbol = true; }
+      else if (looksUsd && !looksBaht) { usd = guess; }
+    }
+  }
+
+  let ok = true;
+  if (/fail|unsuccessful|rejected|cancel|ไม่สำเร็จ|ล้มเหลว|ยกเลิก|ปฏิเสธ/i.test(flat)) ok = false;
+
+  return {
+    ok: true,
+    text: data.text || '',
+    usd, baht, bahtSymbol,
+    amounts: uniqAmounts,
+    success: ok,
+    isWithdrawal,
+    stamps,
+    looseTimes,
+    langs: ['tha', 'eng'],
+    hasThai: true,
+    needsThaiPack: false,
+  };
+}
+
+function hhmm(t){
+  if (!t) return '';
+  const m = /^(\d{1,2})[:.](\d{2})/.exec(t);
+  return m ? String(m[1]).padStart(2,'0') + '.' + m[2] : '';
+}
+
+function timeDecimal(t){
+  const m = /^(\d{1,2})[:.](\d{2})/.exec(t || '');
+  return m ? String(Number(m[1]) + Number(m[2]) / 100) : '';
+}
+
+function recordFromOcr(res){
+  const st  = (res.stamps || []).filter(s => s && s.time);
+  const all = (res.looseTimes || []);
+  const usd = (res.usd === null || res.usd === undefined) ? null : Number(res.usd);
+  const miss = [];
+
+  const isWithdrawal = res.isWithdrawal || usd != null || st.length >= 2;
+  const baht = (res.baht === null || res.baht === undefined) ? null : Number(res.baht);
+  const bahtDirect = baht != null && usd == null;
+
+  if (isWithdrawal && !bahtDirect) {
+    const a = hhmm(st[0] && st[0].time) || hhmm(all[0]);
+    const b = hhmm(st[1] && st[1].time) || hhmm(all[1]) || a;
+    if (usd == null) miss.push('ยอด USD');
+    if (!a) miss.push('เวลาถอน');
+    return {
+      date  : (st[0] && st[0].date) || $('#f_date').value || '',
+      note  : '', status: res.success === false ? '❌' : '✔️',
+      app   : $('#f_app').value, id:'', name:'',
+      time  : a ? (a === b ? a + '-' + a : a + '-' + b) : '',
+      thTime: '',
+      baht  : usd == null ? '' : String(Math.round(usd * S.rate.baht / S.rate.usd)),
+      epay  : usd == null ? '' : String(usd),
+      _ocr  : true, _kind:'withdrawal', _miss: miss,
+    };
+  }
+
+  const tTime = (st[0] && st[0].time) || all[0] || '';
+  let bahtVal = baht;
+  if (bahtVal == null && res.amounts && res.amounts.length) {
+    bahtVal = Math.max.apply(null, res.amounts);
+  }
+  if (bahtVal == null) miss.push('ยอดบาท');
+  if (!tTime) miss.push('เวลาทำรายการ');
+
+  const where = $('#thaiTimeTo').value;
+  const dec = timeDecimal(tTime), hm = hhmm(tTime);
+  return {
+    date  : (st[0] && st[0].date) || $('#f_date').value || '',
+    note  : '', status: res.success === false ? '❌' : '✔️',
+    app   : $('#f_app').value, id:'', name:'',
+    time  : where === 'time'   ? (hm ? hm + '-' + hm : '') : '',
+    thTime: where === 'thTime' ? dec : '',
+    baht  : bahtVal == null ? '' : String(bahtVal),
+    epay  : '',
+    _ocr  : true, _kind:'thai', _miss: miss,
+  };
+}
+
+async function handleImages(files){
+  if (!files.length) return;
+  if (!S.wb) { toast('เปิดไฟล์ .xlsx ก่อน แล้วค่อยลากรูปเข้ามา', 'bad'); return; }
+
+  let worker;
+  try { worker = await getTessWorker(); }
+  catch (e) {
+    banner('<b>อ่านรูปไม่ได้</b><br>' + (S.ocr.error || ''), 'bad');
+    return;
+  }
+
+  const sh = S.wb.sheets[S.sheetIdx];
+  let cap = 0; for (const b of sh.blocks) cap += b.lastRow - b.firstRow + 1;
+
+  $('#ocrBusy').hidden = false;
+  let done = 0, added = 0, failed = 0;
+  for (const f of files) {
+    const el = $('#ocrBusyText');
+    el.dataset.base = 'กำลังอ่านรูป ' + (done + 1) + ' / ' + files.length + ' …';
+    el.textContent = el.dataset.base;
+    try {
+      const canvas = await preprocessSlipImage(f);
+      const { data } = await worker.recognize(canvas, {}, { text:true, blocks:true, hocr:false, tsv:false });
+      const j = extractSlipFields(data);
+      if (S.existing.length + S.pending.length >= cap) { toast('ชีตเต็มแล้ว', 'bad'); break; }
+      const rec = recordFromOcr(j);
+      rec._file = f.name || 'clipboard';
+      S.pending.push(rec);
+      added++;
+    } catch (e) { failed++; console.error(e); }
+    done++;
+    renderTable(); updateCapacity();
+  }
+  $('#ocrBusy').hidden = true;
+
+  const incomplete = S.pending.filter(r => r._ocr && r._miss && r._miss.length);
+  const thai = S.pending.filter(r => r._kind === 'thai').length;
+  let msg = '<b>อ่านรูปเสร็จ — เพิ่มเข้าคิว ' + added + ' รายการ</b>';
+  if (failed) msg += '<br>อ่านไม่สำเร็จ ' + failed + ' รูป';
+  msg += '<br>เหลือเติม <b>ชื่อ</b> (และ ID ถ้ามี) ในตารางด้านขวา แล้วกดบันทึก';
+  if (thai) msg += '<br>🇹🇭 มี ' + thai + ' รายการที่อ่านเป็น<b>สลิปไทย</b>';
+  if (incomplete.length) msg += '<br>⚠ มี ' + incomplete.length + ' รายการที่อ่านค่าได้ไม่ครบ';
+  banner(msg, failed || incomplete.length ? 'warn' : 'good');
+  const first = document.querySelector('#tbody input.cell.need');
+  if (first) first.focus();
+}
+
+function imagesFrom(dt){
+  const out = [];
+  if (!dt) return out;
+  for (const item of dt.files || []) if (/^image\//.test(item.type)) out.push(item);
+  return out;
+}
+
+/* --------------------------------------------------------- ชิป / ปุ่มลัด */
+function syncChips(){
+  $$('.chipset').forEach(set => {
+    const val = $(set.dataset.target).value;
+    set.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.val === val));
+  });
+}
+function nowHM(){ const d=new Date(),p=n=>String(n).padStart(2,'0'); return p(d.getHours())+'.'+p(d.getMinutes()); }
+function mergeTime(){
+  const a = $('#t_from').value.trim(), b = $('#t_to').value.trim();
+  $('#f_time').value = (a && b) ? a+'-'+b : (a || '');
+}
+function updateRate(){
+  const b = parseFloat($('#rateBaht').value), u = parseFloat($('#rateUsd').value);
+  if (isFinite(b) && b > 0 && isFinite(u) && u > 0) {
+    S.rate = { baht:b, usd:u };
+    $('#rateInfo').textContent = '≈ ' + (b/u).toFixed(4) + ' บาท/USD';
+    recalcEpay();
+  }
+}
+
+/* ------------------------------------------------------------- bootstrap */
+function init(){
+  initTheme();
+  $('#openBtn').onclick    = openFile;
+  $('#openBtn2').onclick   = openFile;
+  $('#openOdBtn').onclick  = openFromOneDrive;
+  $('#openOdBtn2').onclick = openFromOneDrive;
+  $('#filePick').onchange = async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const got = await Store.openFromFile(f);
+    S.ref = got.ref;
+    await loadBuffer(got.buf, got.name);
+    e.target.value = '';
+  };
+  $('#addBtn').onclick   = addToQueue;
+  $('#clearBtn').onclick = clearForm;
+  $('#saveBtn').onclick  = saveAll;
+  $('#floatSaveBtn').onclick = saveAll;
+  $('#backupBtn').onclick = downloadBackup;
+
+  const modal = $('#shortcutModal');
+  $('#shortcutBtn').onclick = () => modal.classList.add('open');
+  $('#closeShortcutBtn').onclick = () => modal.classList.remove('open');
+  modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('open'); };
+
+  $('#tblSearch').addEventListener('input', e => {
+    S.searchQuery = e.target.value;
+    renderTable();
+  });
+
+  $$('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      S.filterCategory = btn.dataset.filter;
+      renderTable();
+    });
+  });
+
+  $('#f_baht').addEventListener('input', () => { recalcEpay(); syncChips(); });
+  $('#noEpay').addEventListener('change', recalcEpay);
+
+  const fillName = () => {
+    const nm = S.directory.get($('#f_id').value.trim());
+    if (nm) $('#f_name').value = nm;
+  };
+  $('#f_id').addEventListener('change', fillName);
+  $('#f_id').addEventListener('input', () => {
+    const nm = S.directory.get($('#f_id').value.trim());
+    if (nm && !$('#f_name').value) $('#f_name').value = nm;
+  });
+
+  $$('.chipset').forEach(set => set.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    $(set.dataset.target).value = b.dataset.val;
+    if (set.dataset.target === '#f_baht') recalcEpay();
+    syncChips();
+  }));
+
+  $('#t_from').addEventListener('input', mergeTime);
+  $('#t_to').addEventListener('input', mergeTime);
+  $('#nowFrom').onclick  = () => { $('#t_from').value = nowHM(); mergeTime(); };
+  $('#nowTo').onclick    = () => { $('#t_to').value   = nowHM(); mergeTime(); };
+  $('#sameTime').onclick = () => { $('#t_to').value   = $('#t_from').value; mergeTime(); };
+
+  $('#rateBaht').addEventListener('input', updateRate);
+  $('#rateUsd').addEventListener('input', updateRate);
+
+  const drop = $('#drop');
+  ['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+
+  const overlay = $('#dropOverlay');
+  let dragDepth = 0;
+  document.addEventListener('dragenter', e => {
+    e.preventDefault();
+    dragDepth++;
+    if (S.wb) overlay.classList.add('on');
+  });
+  document.addEventListener('dragover', e => e.preventDefault());
+  document.addEventListener('dragleave', e => {
+    if (--dragDepth <= 0) { dragDepth = 0; overlay.classList.remove('on'); }
+  });
+  document.addEventListener('drop', async e => {
+    e.preventDefault();
+    dragDepth = 0; overlay.classList.remove('on'); drop.classList.remove('over');
+    const files = Array.from(e.dataTransfer.files || []);
+    const book = files.find(f => /\.xlsx$/i.test(f.name));
+    if (book) {
+      const got = await Store.openFromFile(book);
+      S.ref = got.ref;
+      await loadBuffer(got.buf, got.name);
+      return;
+    }
+    const imgs = imagesFrom(e.dataTransfer);
+    if (imgs.length) await handleImages(imgs);
+  });
+
+  document.addEventListener('paste', async e => {
+    const imgs = [];
+    for (const it of (e.clipboardData && e.clipboardData.items) || []) {
+      if (it.kind === 'file' && /^image\//.test(it.type)) { const f = it.getAsFile(); if (f) imgs.push(f); }
+    }
+    if (imgs.length) { e.preventDefault(); await handleImages(imgs); }
+  });
+
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); addToQueue(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveAll(); }
+    if (e.key === 'Escape') { modal.classList.remove('open'); clearForm(); }
+  });
+  window.addEventListener('beforeunload', e => {
+    if (S.pending.length || S.deletes.size) { e.preventDefault(); e.returnValue=''; }
+  });
+
+  if (!canFSA) $('#fsaNote').hidden = false;
+
+  /* เพิ่งกลับมาจากหน้าล็อกอิน Microsoft แบบเปลี่ยนหน้าทั้งหน้า */
+  DS.auth.completeRedirect()
+    .catch(err => toast('เข้าสู่ระบบ OneDrive ไม่สำเร็จ: ' + err.message, 'bad'))
+    .finally(updateOdPill);
+  DS.auth.onChange(updateOdPill);
+  updateOdPill();
+
+  $('#installBtn').onclick = () => DS.pwa.install().then(updatePwaButtons);
+  $('#offlineBtn').onclick = warmOffline;
+  DS.pwa.onChange(updatePwaButtons);
+  updatePwaButtons();
+  applyAppMode();
+
+  updateRate(); syncChips(); checkOcr();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
